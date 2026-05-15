@@ -24,9 +24,13 @@
     --accent-soft: #8b5cf6;
     --code-bg: rgba(255,255,255,0.06);
     --link: #a5b4fc;
-    --serif: "Fraunces", "Times New Roman", serif;
-    --sans:  "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    /* Typewriter everywhere: all three font slots resolve to the same
+       monospace stack. The serif/sans aliases are kept so the existing
+       per-element font-family rules (h1/h2 use --serif, h3/body use --sans,
+       headers + table headers + code use --mono) all unify visually. */
+    --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, "Menlo", "Consolas", monospace;
+    --serif: var(--mono);
+    --sans:  var(--mono);
   }
   * { box-sizing: border-box }
   body {
@@ -59,7 +63,7 @@
       linear-gradient(140deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
     box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 20px rgba(139, 92, 246, 0.45);
   }
-  .top__brand .name { font-family: var(--serif); font-weight: 500; font-size: 17px; letter-spacing: -0.01em; }
+  .top__brand .name { font-family: var(--serif); font-weight: 500; font-size: 15px; letter-spacing: 0; }
   .top__brand .name em { font-style: italic; font-weight: 400; color: var(--muted); }
   .top__nav { display: flex; gap: 24px; align-items: center; color: var(--muted); }
   .top__nav a { color: var(--muted); transition: color 120ms; text-decoration: none; border-bottom: none; }
@@ -89,16 +93,19 @@
   nav.side a:hover { color: var(--text); transform: translateX(2px); }
 
   main { padding: 56px 64px; max-width: 880px; min-width: 0; }
-  h1 { font-family: var(--serif); font-weight: 350; font-variation-settings: "opsz" 144;
-    font-size: 48px; letter-spacing: -0.025em; margin: 0 0 12px; line-height: 1.05; }
+  /* Headings now monospace via --serif/--sans → --mono. Negative
+     letter-spacing was tuned for a variable serif and looks cramped in
+     mono; reset to 0 so the glyphs sit naturally on their grid. */
+  h1 { font-family: var(--serif); font-weight: 500;
+    font-size: 36px; letter-spacing: 0; margin: 0 0 12px; line-height: 1.15; }
   h2 {
-    font-family: var(--serif); font-weight: 400; font-variation-settings: "opsz" 144;
-    font-size: 30px; letter-spacing: -0.02em; margin: 48px 0 16px;
-    padding-top: 32px; border-top: 1px solid var(--border); line-height: 1.15;
+    font-family: var(--serif); font-weight: 500;
+    font-size: 24px; letter-spacing: 0; margin: 48px 0 16px;
+    padding-top: 32px; border-top: 1px solid var(--border); line-height: 1.25;
   }
   h2:first-of-type { border-top: none; padding-top: 0 }
   h3 { font-family: var(--sans); font-size: 14px; font-weight: 600; margin: 28px 0 8px;
-    color: var(--accent); letter-spacing: 0.01em; text-transform: uppercase; }
+    color: var(--accent); letter-spacing: 0.04em; text-transform: uppercase; }
   p, li { color: var(--text); opacity: 0.88; font-weight: 300; font-size: 15.5px; line-height: 1.65; }
   ul, ol { padding-left: 22px }
   li { margin: 4px 0; }
