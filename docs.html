@@ -276,7 +276,34 @@
 /install /Users/you/code/your-mcp     # local dev path</code></pre>
     <p>Studio clones (or symlinks if local), validates the manifest, and runs install hooks. A <em>Cloning + installing from &lt;source&gt;…</em> indicator stays in the transcript until the hooks finish (this can take a minute for an MCP that runs <code>npm install</code> + <code>npm run build</code>), then it resolves to <code>installed &lt;id&gt; (&lt;version&gt;)</code>.</p>
     <p>If the manifest declares <code>auth</code> of type <code>api_key</code>, <code>oauth2</code>, or <code>oauth2_pkce</code>, Studio opens <strong>Settings → MCP Servers</strong> focused on the new server so you can fill in the credentials before using it. MCPs with <code>auth: { type: "none" }</code> (or no auth block) are usable immediately.</p>
-    <p>To uninstall an MCP, open <strong>Settings → MCP Servers</strong>, expand the row, and click <strong>Uninstall</strong>. The bundled MCPs below (Chrome, Claude Code, Filesystem, Git, Studio Core) are locked — they ship with Studio and can't be removed.</p>
+    <p>To uninstall an MCP, open <strong>Settings → MCP Servers</strong>, expand the row, and click <strong>Uninstall</strong>. The bundled MCPs below (Chrome, Filesystem, Studio Core) are locked — they ship with Studio and can't be removed.</p>
+
+    <h2 id="mcp-library">MCP Library</h2>
+    <p>Third-party MCPs maintained alongside MCP Studio. Install any of these by pasting the URL into <code>/install</code>:</p>
+    <table>
+      <tr><th>MCP</th><th>What it does</th><th>Install URL</th></tr>
+      <tr>
+        <td><strong>Claude Code</strong><br><span class="pill">dev.mcpwidget.claude_code</span></td>
+        <td>Drive the local <code>claude</code> CLI as MCP tools — hands a prompt to Claude Code in a specific project directory. Was previously bundled.</td>
+        <td><code>https://github.com/RPieterse/mcp-studio-claude-code-mcp</code></td>
+      </tr>
+      <tr>
+        <td><strong>Git</strong><br><span class="pill">dev.mcpwidget.git</span></td>
+        <td>Local git + GitHub PRs via the <code>gh</code> CLI. Holds the per-workspace storage that other MCPs read via <code>${storage.dev.mcpwidget.git.active_workspace_path}</code>. Was previously bundled.</td>
+        <td><code>https://github.com/RPieterse/mcp-studio-git-mcp</code></td>
+      </tr>
+      <tr>
+        <td><strong>Google Sheets (service account)</strong><br><span class="pill">com.rohanpieterse.gsheets</span></td>
+        <td>Create / read / modify Sheets via a Google service account. Files owned by the SA. Best for headless / scheduled jobs.</td>
+        <td><code>https://github.com/RPieterse/mcp-studio-google-sheets-mcp</code></td>
+      </tr>
+      <tr>
+        <td><strong>Google Sheets (OAuth)</strong><br><span class="pill">com.rohanpieterse.gsheets_oauth</span></td>
+        <td>Create / read / modify Sheets as the authenticated user. Files owned by you, in your personal Drive. Best for interactive use.</td>
+        <td><code>https://github.com/RPieterse/mcp-studio-google-sheets-oauth-mcp</code></td>
+      </tr>
+    </table>
+    <p>See the <code>docs/MCP_CONTRACT.md</code> in the main repo for the side-by-side trade-off between the two Google Sheets MCPs (service account vs OAuth — ownership, sharing, personal-project quirks).</p>
 
     <h1 style="margin-top: 56px">Built-in MCPs</h1>
 
