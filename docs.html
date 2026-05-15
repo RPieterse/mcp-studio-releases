@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>MCP Studio · Documentation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Slash commands, manifest contract, quick commands, auth, storage, and the full Notes-MCP walkthrough for MCP Studio." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #0a0b13;
+    --bg-soft: #11131e;
+    --panel: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --border-2: rgba(255,255,255,0.14);
+    --text: #f4f4f8;
+    --muted: rgba(255,255,255,0.55);
+    --muted-2: rgba(255,255,255,0.38);
+    --accent: #c4b5fd;
+    --accent-soft: #8b5cf6;
+    --code-bg: rgba(255,255,255,0.06);
+    --link: #a5b4fc;
+    --serif: "Fraunces", "Times New Roman", serif;
+    --sans:  "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+  * { box-sizing: border-box }
+  body {
+    margin: 0; padding: 0;
+    font-family: var(--sans);
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection { background: rgba(196, 181, 253, 0.35); color: white; }
+
+  /* Top bar — matches the landing page */
+  header.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(10, 11, 19, 0.78);
+    backdrop-filter: saturate(120%) blur(14px);
+    -webkit-backdrop-filter: saturate(120%) blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .top__inner {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+  }
+  .top__brand { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
+  .top__brand .mark { width: 18px; height: 18px; border-radius: 50%;
+    background:
+      radial-gradient(120% 120% at 30% 25%, rgba(255, 255, 255, 0.45), transparent 55%),
+      linear-gradient(140deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 20px rgba(139, 92, 246, 0.45);
+  }
+  .top__brand .name { font-family: var(--serif); font-weight: 500; font-size: 17px; letter-spacing: -0.01em; }
+  .top__brand .name em { font-style: italic; font-weight: 400; color: var(--muted); }
+  .top__nav { display: flex; gap: 24px; align-items: center; color: var(--muted); }
+  .top__nav a { color: var(--muted); transition: color 120ms; text-decoration: none; border-bottom: none; }
+  .top__nav a:hover, .top__nav a.is-active { color: var(--text); }
+
+  .layout {
+    display: grid; grid-template-columns: 280px 1fr;
+    min-height: calc(100vh - 60px); max-width: 1280px; margin: 0 auto;
+  }
+  nav.side {
+    border-right: 1px solid var(--border);
+    padding: 40px 24px 40px 32px;
+    position: sticky; top: 60px; height: calc(100vh - 60px); overflow: auto;
+  }
+  nav.side h2 {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--muted-2); margin: 28px 0 10px;
+    border-top: none; padding-top: 0;
+  }
+  nav.side h2:first-child { margin-top: 0 }
+  nav.side a {
+    display: block; padding: 5px 0; color: var(--muted); text-decoration: none;
+    font-size: 13.5px; transition: color 100ms ease, transform 100ms ease;
+    border-bottom: none;
+  }
+  nav.side a:hover { color: var(--text); transform: translateX(2px); }
+
+  main { padding: 56px 64px; max-width: 880px; min-width: 0; }
+  h1 { font-family: var(--serif); font-weight: 350; font-variation-settings: "opsz" 144;
+    font-size: 48px; letter-spacing: -0.025em; margin: 0 0 12px; line-height: 1.05; }
+  h2 {
+    font-family: var(--serif); font-weight: 400; font-variation-settings: "opsz" 144;
+    font-size: 30px; letter-spacing: -0.02em; margin: 48px 0 16px;
+    padding-top: 32px; border-top: 1px solid var(--border); line-height: 1.15;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0 }
+  h3 { font-family: var(--sans); font-size: 14px; font-weight: 600; margin: 28px 0 8px;
+    color: var(--accent); letter-spacing: 0.01em; text-transform: uppercase; }
+  p, li { color: var(--text); opacity: 0.88; font-weight: 300; font-size: 15.5px; line-height: 1.65; }
+  ul, ol { padding-left: 22px }
+  li { margin: 4px 0; }
+  strong { font-weight: 500; opacity: 1; color: var(--text); }
+  code {
+    font-family: var(--mono);
+    font-size: 0.86em; background: var(--code-bg); padding: 1px 6px; border-radius: 4px;
+    color: var(--accent);
+  }
+  pre {
+    background: rgba(0,0,0,0.5); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 22px; overflow: auto;
+    font-family: var(--mono); font-size: 12.5px; line-height: 1.65;
+  }
+  pre code { background: transparent; padding: 0; color: inherit; font-size: inherit; }
+  a { color: var(--link); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 120ms; }
+  main a:hover { border-bottom-color: var(--link); }
+  table { border-collapse: collapse; width: 100%; margin: 18px 0 }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 14px }
+  th { color: var(--muted-2); font-weight: 500; font-family: var(--mono);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .pill { display: inline-block; font-family: var(--mono); font-size: 11px;
+    padding: 2px 8px; border-radius: 4px; background: var(--code-bg); color: var(--accent);
+    margin-left: 6px; vertical-align: middle; }
+  .lead { font-size: 17px; color: var(--muted); margin: 8px 0 36px; font-weight: 300; max-width: 60ch; }
+  .grid { display: grid; gap: 8px; margin: 12px 0 }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px }
+
+  @media (max-width: 980px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.side { position: static; height: auto; border-right: none;
+      border-bottom: 1px solid var(--border); padding: 24px; }
+    main { padding: 32px 24px; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 24px; }
+    .top__inner { padding: 14px 20px; }
+    .top__nav { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top__inner">
+    <a class="top__brand" href="index.html">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="name">MCP <em>Studio</em></span>
+    </a>
+    <nav class="top__nav">
+      <a href="index.html">Download</a>
+      <a href="docs.html" class="is-active">Docs</a>
+      <a href="https://github.com/RPieterse/mcp-studio-releases/releases" target="_blank" rel="noopener">Releases</a>
+    </nav>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="side">
+    <h2>Using MCP Studio</h2>
+    <a href="#overview">Overview</a>
+    <a href="#slash">Slash commands</a>
+    <a href="#agent">AI agent</a>
+    <a href="#voice">Voice</a>
+    <a href="#schedules">Schedules</a>
+    <a href="#installing">Installing MCPs</a>
+
+    <h2>Built-in MCPs</h2>
+    <a href="#chrome">Chrome</a>
+    <a href="#claude-code">Claude Code</a>
+    <a href="#git">Git</a>
+    <a href="#filesystem">Filesystem</a>
+
+    <h2>Building an MCP</h2>
+    <a href="#contract">The contract</a>
+    <a href="#manifest">widget.manifest.json</a>
+    <a href="#quick-commands">Quick commands</a>
+    <a href="#auth">Authentication</a>
+    <a href="#storage">Storage</a>
+    <a href="#local-dev">Local development</a>
+    <a href="#tutorial">Full tutorial: Notes MCP</a>
+    <a href="#publishing">Publishing</a>
+  </nav>
+
+  <main>
+    <h1 id="overview">MCP Studio</h1>
+    <p class="lead">A floating cross-platform widget that hosts MCP servers and lets you drive them from one place. Type or speak; the agent picks tools across every installed MCP.</p>
+
+    <h2 id="slash">Slash commands</h2>
+    <table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>/help</code></td><td>Show all built-in commands</td></tr>
+      <tr><td><code>/mcp-servers</code></td><td>List installed MCPs (use <code>-name &lt;id&gt;</code> to drill into one)</td></tr>
+      <tr><td><code>/install &lt;git-url-or-path&gt;</code></td><td>Install a new MCP from git or a local directory</td></tr>
+      <tr><td><code>/configure [mcp-id]</code></td><td>Open settings, optionally focused on an MCP</td></tr>
+      <tr><td><code>/transparency &lt;0–100&gt;</code></td><td>Panel opacity (also <code>+N</code> / <code>-N</code> deltas)</td></tr>
+      <tr><td><code>/clear</code></td><td>Clear the transcript</td></tr>
+      <tr><td><code>/hide</code></td><td>Close the panel</td></tr>
+    </table>
+
+    <h2 id="agent">AI agent</h2>
+    <p>Natural-language prompts (no leading <code>/</code>) go to the configured LLM provider. The provider receives every installed MCP's tools as a single catalog and chains across them freely. Configure in <strong>Settings → AI Agent</strong>.</p>
+    <p>Three families of provider:</p>
+    <ul>
+      <li><strong>Local CLIs</strong> — no API key. Studio shells out to a binary you already have authenticated: <code>claude</code>, <code>gemini</code>, or <code>codex</code>. For each, Studio writes a temporary <code>mcp-config.json</code> with all installed Studio MCPs and passes <code>--mcp-config</code> (where supported) so the CLI's own tool dispatcher sees the same catalog.</li>
+      <li><strong>Direct APIs</strong> — Anthropic / OpenAI / Gemini. Bring your own key. The Studio agent loop is in charge and dispatches MCP tools directly.</li>
+    </ul>
+    <p>Quick commands are deterministic shortcuts; the agent is for ambiguous multi-step requests like <em>"go to news.ycombinator.com, save the top 3 titles to a file in widget, commit them"</em>.</p>
+    <p><strong>Memory across turns.</strong> Every agent call threads the prior conversation as context — whether you're in a project, in a scheduled fire, or in an ephemeral chat. Memory is bounded to the last 30 messages and truncated at a clean user-prompt boundary. <code>/clear</code> wipes it, <code>/project end</code> ends the project's, and each schedule has its own independent history.</p>
+    <p><strong>Rich responses.</strong> Markdown, fenced code blocks, lists, tables, and inline HTML all auto-render in the transcript — both your prompts and the agent's replies. Each response sits in its own card so turns stay visually distinct. URLs autolink, inline HTML is sanitized (no <code>&lt;script&gt;</code>, no event handlers).</p>
+
+    <h2 id="voice">Voice</h2>
+    <p>Two buttons in the input bar:</p>
+    <ul>
+      <li><strong>voice</strong>: one-shot. Captures one phrase, sends as a prompt.</li>
+      <li><strong>Always on</strong>: continuous. Each detected phrase auto-sends.</li>
+    </ul>
+    <p>Both swap their icon for a pulsing red dot while listening. Defaults to the browser's Web Speech API. macOS will prompt for microphone permission on first use.</p>
+
+    <h2 id="host-bridge">Host bridge — Studio drives itself</h2>
+    <p>Studio's Rust shell exposes a tiny loopback HTTP control surface that any installed MCP can call. Bundled <strong>Studio Core</strong> uses this to give the agent four self-control tools:</p>
+    <table>
+      <tr><th>Tool</th><th>What it does</th></tr>
+      <tr><td><code>panel_show</code></td><td>Open the chat panel (anchored under the FAB)</td></tr>
+      <tr><td><code>panel_hide</code></td><td>Hide the panel without closing the app</td></tr>
+      <tr><td><code>panel_toggle</code></td><td>Flip panel visibility</td></tr>
+      <tr><td><code>fab_move</code></td><td>Move the floating FAB to <code>{x, y}</code> — useful for getting Studio out of the way before a screenshot</td></tr>
+    </table>
+    <p>You can call these directly with <code>/panel_show</code>, <code>/panel_hide</code>, <code>/panel_toggle</code>, and <code>/fab</code>, or just ask the agent: <em>"hide yourself, screenshot my screen, then come back and tell me what's on it."</em></p>
+    <p>Third-party MCPs get the same access — Studio injects <code>MCP_WIDGET_HOST_PORT</code> and <code>MCP_WIDGET_HOST_TOKEN</code> env vars at spawn. POST to <code>http://127.0.0.1:&lt;port&gt;/panel/show</code> (etc.) with <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+
+    <h2 id="schedules">Schedules</h2>
+    <p>Run prompts automatically at a future time or on a recurring interval. Each fired schedule looks identical to typing the prompt and hitting send — your configured agent handles it.</p>
+    <p>Manage from <strong>Settings → Schedules</strong> or with these slash commands:</p>
+    <table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>/schedule</code></td><td>list all schedules</td></tr>
+      <tr><td><code>/schedule add</code></td><td>open the new-schedule form in Settings</td></tr>
+      <tr><td><code>/schedule rm &lt;id&gt;</code></td><td>delete a schedule</td></tr>
+      <tr><td><code>/schedule run &lt;id&gt;</code></td><td>fire a schedule immediately (advances <code>next_fire_at</code>)</td></tr>
+    </table>
+    <p>Two trigger kinds:</p>
+    <ul>
+      <li><strong>Once</strong> — fires at a specific date/time, then disables itself.</li>
+      <li><strong>Every N minutes</strong> — fires repeatedly. If your laptop slept past several fire times, the schedule fires <em>once</em> on resume (within a 1-hour grace), not N backlogged copies.</li>
+    </ul>
+    <p>The timer loop lives in the Rust core and ticks every 30 seconds. State persists at <code>~/.mcp-widget/schedules.json</code>.</p>
+
+    <h3>Own context, not the active project</h3>
+    <p>Each schedule has its own dedicated context. When a schedule fires:</p>
+    <ul>
+      <li>The agent runs the prompt <em>headlessly</em> — not in the visible panel, and not inside whatever project is currently active.</li>
+      <li>The prompt and response (or error) are appended to <code>~/.mcp-widget/schedules/&lt;id&gt;/runs.jsonl</code>, one record per fire.</li>
+      <li>The visible panel only shows a one-liner: <code>⏰ &lt;name&gt; completed — view in Settings → Schedules</code>.</li>
+    </ul>
+    <p>Open the schedule's <strong>runs</strong> button in Settings to read past fires. This keeps your project transcripts clean — a "every 5 min, check if X" schedule won't bury your real conversation.</p>
+    <p><em>The agent remembers across fires.</em> Each schedule's own prior runs are threaded into the next call as <code>priorMessages</code>, so a recurring "summarize new emails" schedule sees what it reported last time. Same goes for projects (memory persists per project) and ephemeral chats (memory lives for the panel session). Memory is capped at 30 messages and truncated at a clean user-prompt boundary so tool exchanges aren't split.</p>
+
+    <h2 id="installing">Installing MCPs</h2>
+    <pre><code>/install https://github.com/your-org/your-mcp
+/install /Users/you/code/your-mcp     # local dev path</code></pre>
+    <p>Studio clones (or symlinks if local), validates the manifest, runs install hooks, and asks for any declared permissions.</p>
+
+    <h1 style="margin-top: 56px">Built-in MCPs</h1>
+
+    <h2 id="chrome">Chrome <span class="pill">dev.mcpwidget.chrome</span></h2>
+    <p>Open URLs, search, and read open tabs in Google Chrome (macOS, via AppleScript).</p>
+    <table>
+      <tr><th>Tool</th><th>Args</th></tr>
+      <tr><td><code>open</code></td><td><code>url</code></td></tr>
+      <tr><td><code>search</code></td><td><code>query</code></td></tr>
+      <tr><td><code>current_tab</code></td><td>—</td></tr>
+      <tr><td><code>list_tabs</code></td><td>—</td></tr>
+    </table>
+    <p>Quick commands: <code>/open</code>, <code>/search</code>, <code>/tabs</code></p>
+
+    <h2 id="claude-code">Claude Code <span class="pill">dev.mcpwidget.claude_code</span></h2>
+    <p>Drives the local <code>claude</code> CLI. Hands a prompt to Claude Code in a specific project directory — Claude does its own file reads, edits, and tool use internally.</p>
+    <table>
+      <tr><th>Tool</th><th>Args</th></tr>
+      <tr><td><code>run</code></td><td><code>prompt</code>, <code>cwd</code> (auto-filled from this MCP's <code>active_workspace_path</code> storage)</td></tr>
+    </table>
+    <p>Quick commands: <code>/claude &lt;prompt&gt;</code></p>
+    <p>Set the workspace under <strong>Settings → MCP Servers → ClaudeCode → Storage</strong>.</p>
+
+    <h2 id="git">Git <span class="pill">dev.mcpwidget.git</span></h2>
+    <p>Wraps the local <code>git</code> and <code>gh</code> CLIs. Uses your existing git auth + <code>gh auth login</code>.</p>
+    <p>Every tool takes a <code>cwd</code> — quick commands auto-fill it from this MCP's <code>active_workspace_path</code> storage. Set it under <strong>Settings → MCP Servers → Git → Storage</strong>.</p>
+    <table>
+      <tr><th>Tool</th><th>Args</th></tr>
+      <tr><td><code>status</code></td><td><code>cwd</code></td></tr>
+      <tr><td><code>diff</code></td><td><code>cwd</code>, <code>staged?</code>, <code>paths?</code></td></tr>
+      <tr><td><code>add</code></td><td><code>cwd</code>, <code>paths</code></td></tr>
+      <tr><td><code>commit</code></td><td><code>cwd</code>, <code>message</code></td></tr>
+      <tr><td><code>branch</code></td><td><code>cwd</code>, <code>action: list|create|switch</code>, <code>name?</code></td></tr>
+      <tr><td><code>push</code></td><td><code>cwd</code>, <code>remote?</code>, <code>branch?</code>, <code>set_upstream?</code>, <code>force?</code></td></tr>
+      <tr><td><code>pr_create</code></td><td><code>cwd</code>, <code>title</code>, <code>body</code></td></tr>
+      <tr><td><code>pr_comment</code></td><td><code>cwd</code>, <code>number</code>, <code>body</code></td></tr>
+    </table>
+    <p>Quick commands: <code>/status</code>, <code>/diff</code>, <code>/branches</code>, <code>/commit</code>, <code>/pr</code></p>
+
+    <h2 id="filesystem">Filesystem <span class="pill">dev.mcpwidget.fs</span></h2>
+    <p>Read, write, list, search, and stat files on the local filesystem. Refuses to delete <code>/</code> or <code>$HOME</code>.</p>
+    <table>
+      <tr><th>Tool</th><th>Args</th></tr>
+      <tr><td><code>list_dir</code></td><td><code>path</code></td></tr>
+      <tr><td><code>read_file</code></td><td><code>path</code>, <code>max_bytes?</code></td></tr>
+      <tr><td><code>write_file</code></td><td><code>path</code>, <code>content</code>, <code>create_parents?</code></td></tr>
+      <tr><td><code>create_dir</code></td><td><code>path</code></td></tr>
+      <tr><td><code>delete</code></td><td><code>path</code>, <code>recursive?</code></td></tr>
+      <tr><td><code>move</code></td><td><code>from</code>, <code>to</code></td></tr>
+      <tr><td><code>stat</code></td><td><code>path</code></td></tr>
+      <tr><td><code>search</code></td><td><code>path</code>, <code>query</code>, <code>max_results?</code></td></tr>
+    </table>
+    <p>Quick commands: <code>/ls</code>, <code>/cat</code>, <code>/find</code></p>
+
+    <h1 style="margin-top: 56px" id="contract">Building an MCP</h1>
+    <p class="lead">An MCP for Studio is just a regular Model Context Protocol server with one extra file: <code>widget.manifest.json</code> at the repo root.</p>
+
+    <h2 id="manifest">widget.manifest.json</h2>
+    <p>The contract every Studio-compatible MCP targets. Here's a minimal example:</p>
+    <pre><code>{
+  "manifest_version": 1,
+  "id": "com.example.weather",
+  "name": "Weather",
+  "version": "1.0.0",
+  "description": "Current conditions for a city.",
+  "mcp": {
+    "transport": "stdio",
+    "command": "node",
+    "args": ["./dist/server.js"],
+    "env": { "WEATHER_API_KEY": "${secrets.weather.api_key}" }
+  },
+  "install": [
+    { "shell": "npm install" },
+    { "shell": "npm run build" }
+  ],
+  "auth": {
+    "type": "api_key",
+    "fields": [{ "key": "api_key", "label": "Weather API key", "secret": true }],
+    "store_as": "weather"
+  },
+  "permissions": {
+    "network": ["api.weather.example.com"],
+    "secrets": ["weather"]
+  },
+  "quick_commands": [
+    { "trigger": "weather", "tool": "current", "arg_key": "city" }
+  ]
+}</code></pre>
+    <p>Fields:</p>
+    <ul>
+      <li><code>id</code> — reverse-DNS, lowercase</li>
+      <li><code>name</code>, <code>version</code> — display + semver</li>
+      <li><code>mcp</code> — how to launch (stdio / sse / http). For stdio, the <code>env</code> values may contain <code>${secrets.&lt;store_as&gt;.&lt;field&gt;}</code> interpolations.</li>
+      <li><code>install</code> — shell hooks run after clone</li>
+      <li><code>auth</code> — <code>none</code>, <code>api_key</code> (form on install), or <code>oauth2</code> / <code>oauth2_pkce</code> (browser flow)</li>
+      <li><code>permissions</code> — network domains, filesystem paths, secret keys the MCP needs</li>
+      <li><code>quick_commands</code> — slash-command shortcuts (below)</li>
+    </ul>
+
+    <h2 id="quick-commands">Quick commands</h2>
+    <p>Each quick command maps a slash trigger to a single tool call without going through the LLM.</p>
+    <pre><code>{
+  "trigger": "commit",
+  "description": "Commit staged changes",
+  "tool": "commit",
+  "arg_key": "message",
+  "args": { "cwd": "${storage.active_workspace_path}" }
+}</code></pre>
+    <p>Three knobs:</p>
+    <ul>
+      <li><strong><code>arg_key</code></strong> — the user's input after the trigger becomes the value at this key. <code>/commit fix typo</code> → <code>{message: "fix typo"}</code>.</li>
+      <li><strong><code>args</code></strong> — static defaults merged on top. String values support two kinds of interpolation:
+        <ul>
+          <li><code>${context.now}</code> / <code>${context.home}</code> — Studio-provided values.</li>
+          <li><code>${storage.&lt;key&gt;}</code> — your MCP's own stored value (see <a href="#storage">Storage</a> below).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2 id="auth">Authentication</h2>
+    <h3>none</h3>
+    <p>MCP uses your local system auth (existing CLI tokens, OS keychain, etc.). Used by the bundled Git, Chrome, Filesystem, and Claude Code MCPs.</p>
+    <h3>api_key</h3>
+    <p>Studio renders a form derived from <code>auth.fields</code>, stores in the OS keychain under <code>store_as</code>, injects into env via <code>${secrets.&lt;store_as&gt;.&lt;field&gt;}</code> at spawn time.</p>
+    <h3>oauth2 / oauth2_pkce</h3>
+    <p>Click <strong>Authorize in browser</strong>. Studio spawns a one-shot loopback server, opens the authorize URL, captures the redirect, exchanges the code for tokens, stores in keychain. Refresh handled automatically.</p>
+
+    <h2 id="storage">Storage</h2>
+    <p>Many MCPs need a small amount of per-MCP state that isn't a secret — an active project path, a default branch, a preferred unit system. Declare a <code>storage</code> block in the manifest and Studio gives you:</p>
+    <ul>
+      <li>A typed form auto-rendered under <strong>Settings → MCP Servers → &lt;your MCP&gt; → Storage</strong>.</li>
+      <li>A JSON file at <code>~/.mcp-widget/storage/&lt;mcp_id&gt;.json</code> that holds the values.</li>
+      <li><code>${storage.&lt;key&gt;}</code> interpolation inside the <code>env</code> at spawn and inside quick-command <code>args</code> at call time.</li>
+    </ul>
+    <pre><code>"storage": [
+  {
+    "key": "active_workspace_path",
+    "type": "text",
+    "label": "Active workspace",
+    "description": "Project directory git operations run in.",
+    "default": ""
+  },
+  {
+    "key": "default_branch",
+    "type": "enum",
+    "label": "Default branch",
+    "options": ["main", "master", "develop"],
+    "default": "main"
+  }
+]</code></pre>
+    <p>Supported <code>type</code> values: <code>text</code>, <code>number</code>, <code>boolean</code>, <code>enum</code> (with <code>options</code>), and <code>map</code> (a string→string dictionary, e.g. friendly_name → absolute_path). Add <code>"secret": true</code> on a text field to mask the input — useful for tokens you want kept in the per-MCP file rather than the OS keychain. <code>map</code> entries are not secret-eligible.</p>
+    <p>Each MCP owns its own storage. To <em>read</em> another MCP's value (so you can avoid duplicating concepts like a workspace path) use a dotted reference:</p>
+    <pre><code>"args": { "cwd": "${storage.dev.mcpwidget.git.active_workspace_path}" }</code></pre>
+    <p>The host resolves the longest matching prefix as the MCP id and the final segment as the key. The bundled <code>ClaudeCode</code> and <code>Filesystem</code> MCPs use this to inherit Git's workspace without storing their own copy.</p>
+
+    <h3>Storage shortcuts</h3>
+    <p>Quick commands can read or write a single storage key directly — no tool call involved. Declare <code>storage_action</code> instead of <code>tool</code>:</p>
+    <pre><code>{
+  "trigger": "workspace",
+  "description": "Show or set the active workspace path",
+  "storage_action": { "key": "active_workspace_path" }
+}</code></pre>
+    <p>Behavior: <code>/workspace</code> prints the current value; <code>/workspace /path/to/repo</code> writes it.</p>
+
+    <h3>Switcher shortcuts (<code>select_from</code>)</h3>
+    <p>Pair a primitive key with a <code>map</code> storage key and the quick command becomes a named-entry switcher:</p>
+    <pre><code>"storage": [
+  { "key": "workspaces", "type": "map", "label": "Workspaces" },
+  { "key": "active_workspace_path", "type": "text", "label": "Active path" }
+],
+"quick_commands": [
+  {
+    "trigger": "workspace",
+    "description": "List, switch, add, or remove saved workspaces",
+    "storage_action": {
+      "key": "active_workspace_path",
+      "select_from": "workspaces"
+    }
+  }
+]</code></pre>
+    <p>The Git MCP ships with exactly this shape. Behavior of <code>/workspace</code>:</p>
+    <ul>
+      <li><code>/workspace</code> — list saved entries with the active one marked.</li>
+      <li><code>/workspace &lt;name&gt;</code> — switch active to that entry (mirrors its path into <code>key</code> so cross-MCP <code>${storage.dev.mcpwidget.git.active_workspace_path}</code> keeps working).</li>
+      <li><code>/workspace &lt;name&gt; &lt;path&gt;</code> — add or overwrite an entry and switch to it.</li>
+      <li><code>/workspace rm &lt;name&gt;</code> (or <code>/workspace -&lt;name&gt;</code>) — remove an entry.</li>
+    </ul>
+
+    <h2 id="tutorial">Full tutorial: Notes MCP</h2>
+    <p>Walk through building a working MCP from zero — wraps a fictional <code>notes.example.com</code> REST API, ships an api_key auth flow, exposes 5 tools and 3 quick commands with context forms, installs into Studio in under 10 minutes.</p>
+
+    <h3>1. Scaffold the project</h3>
+    <pre><code>mkdir notes-mcp && cd notes-mcp
+npm init -y
+npm install @modelcontextprotocol/sdk
+npm install --save-dev typescript @types/node @mcp-widget/manifest-schema
+mkdir src
+
+cat &gt; tsconfig.json &lt;&lt;'EOF'
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"]
+}
+EOF</code></pre>
+
+    <h3>2. Write widget.manifest.json</h3>
+    <p>The contract — at the repo root.</p>
+    <pre><code>{
+  "manifest_version": 1,
+  "id": "com.example.notes",
+  "name": "Notes",
+  "version": "0.0.1",
+  "description": "Read and write notes at notes.example.com.",
+  "icon": "./icon.svg",
+  "homepage": "https://notes.example.com",
+
+  "mcp": {
+    "transport": "stdio",
+    "command": "node",
+    "args": ["./dist/server.js"],
+    "env": {
+      "NOTES_API_KEY": "${secrets.notes.api_key}"
+    }
+  },
+
+  "install": [
+    { "shell": "npm install" },
+    { "shell": "npm run build" }
+  ],
+
+  "auth": {
+    "type": "api_key",
+    "fields": [
+      { "key": "api_key", "label": "Notes API key", "secret": true }
+    ],
+    "store_as": "notes"
+  },
+
+  "permissions": {
+    "network": ["notes.example.com"],
+    "secrets": ["notes"]
+  },
+
+  "quick_commands": [
+    {
+      "trigger": "note",
+      "description": "Create a new note",
+      "tool": "create_note",
+      "context_requirements": [
+        { "key": "title", "type": "text", "label": "Title", "required": true },
+        { "key": "content", "type": "text", "label": "Content", "required": true, "multiline": true },
+        { "key": "tags", "type": "enum", "label": "Tags",
+          "options": ["work", "personal", "ideas", "todo"], "default": "ideas" }
+      ]
+    },
+    {
+      "trigger": "notes",
+      "description": "List recent notes",
+      "tool": "list_notes"
+    },
+    {
+      "trigger": "find-note",
+      "description": "Search your notes by keyword",
+      "tool": "search_notes",
+      "arg_key": "query"
+    }
+  ]
+}</code></pre>
+    <p>Things to notice:</p>
+    <ul>
+      <li>The <code>env</code> uses <code>${secrets.notes.api_key}</code> — Studio reads the saved api_key out of the OS keychain at spawn time and exposes it to your process as <code>process.env.NOTES_API_KEY</code>. Your code never sees the keychain.</li>
+      <li><code>permissions.network</code> declares the one domain you'll talk to. Future versions will enforce this as a firewall; today it's a trust signal.</li>
+      <li>The first quick command (<code>/note</code>) has no <code>arg_key</code> but <em>does</em> have <code>context_requirements</code>. Studio renders a 3-field inline form (title, multiline content, tags enum) when the user types <code>/note</code>.</li>
+      <li>The third (<code>/find-note</code>) uses <code>arg_key</code> so <code>/find-note dragons</code> calls <code>search_notes({query:"dragons"})</code> without a form.</li>
+    </ul>
+
+    <h3>3. Implement the MCP server</h3>
+    <p>Create <code>src/server.ts</code>:</p>
+    <pre><code>import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+
+const API = "https://notes.example.com/api/v1";
+const KEY = process.env.NOTES_API_KEY;
+if (!KEY) {
+  console.error("NOTES_API_KEY missing — open Settings → MCP Servers → Notes");
+  process.exit(1);
+}
+
+async function call(method: string, path: string, body?: unknown) {
+  const res = await fetch(`${API}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) throw new Error(`${method} ${path}: ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
+const server = new Server(
+  { name: "notes", version: "0.0.1" },
+  { capabilities: { tools: {} } },
+);
+
+const TOOLS = [
+  {
+    name: "list_notes",
+    description: "Return the 20 most recent notes.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  },
+  {
+    name: "get_note",
+    description: "Fetch a single note by id.",
+    inputSchema: {
+      type: "object",
+      properties: { id: { type: "string", minLength: 1 } },
+      required: ["id"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "create_note",
+    description: "Create a note with title, markdown content, and tag.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        title: { type: "string", minLength: 1 },
+        content: { type: "string" },
+        tags: { type: "string" }
+      },
+      required: ["title", "content"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "update_note",
+    description: "Update an existing note's content.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: { type: "string", minLength: 1 },
+        content: { type: "string", minLength: 1 }
+      },
+      required: ["id", "content"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "search_notes",
+    description: "Substring search across all notes.",
+    inputSchema: {
+      type: "object",
+      properties: { query: { type: "string", minLength: 1 } },
+      required: ["query"],
+      additionalProperties: false,
+    },
+  },
+];
+
+server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
+
+server.setRequestHandler(CallToolRequestSchema, async (req) => {
+  const a = req.params.arguments as Record&lt;string, string&gt;;
+  let text = "";
+  try {
+    switch (req.params.name) {
+      case "list_notes": {
+        const notes = await call("GET", "/notes?limit=20");
+        text = notes.map((n: any) =&gt; `[${n.id}] ${n.title}`).join("\n");
+        break;
+      }
+      case "get_note": {
+        const n = await call("GET", `/notes/${a.id}`);
+        text = `# ${n.title}\n\n${n.content}`;
+        break;
+      }
+      case "create_note": {
+        const n = await call("POST", "/notes", {
+          title: a.title, content: a.content, tags: a.tags?.split(",").map(s =&gt; s.trim()),
+        });
+        text = `created note ${n.id}: ${n.title}`;
+        break;
+      }
+      case "update_note": {
+        await call("PATCH", `/notes/${a.id}`, { content: a.content });
+        text = `updated ${a.id}`;
+        break;
+      }
+      case "search_notes": {
+        const hits = await call("GET", `/notes/search?q=${encodeURIComponent(a.query)}`);
+        text = hits.map((h: any) =&gt; `[${h.id}] ${h.title} — ${h.snippet}`).join("\n");
+        break;
+      }
+      default:
+        throw new Error(`unknown tool: ${req.params.name}`);
+    }
+    return { content: [{ type: "text", text: text || "(no results)" }] };
+  } catch (err) {
+    return { content: [{ type: "text", text: (err as Error).message }], isError: true };
+  }
+});
+
+await server.connect(new StdioServerTransport());
+</code></pre>
+
+    <h3>4. Local install + test</h3>
+    <pre><code># Build
+npx tsc
+
+# Install from your local path
+node /path/to/mcp-widget/apps/cli/dist/index.js install --path "$(pwd)"
+
+# Or from inside the panel
+/install /path/to/notes-mcp
+
+# Studio prompts for the API key — paste it, save</code></pre>
+    <p>Now in the panel:</p>
+    <ul>
+      <li><code>/mcp-servers -name notes</code> — see the 5 tools + 3 quick commands</li>
+      <li><code>/note</code> — the inline 3-field form appears (title, content, tags dropdown). Fill, click Run.</li>
+      <li><code>/find-note dragons</code> — instant tool call, no form</li>
+      <li><code>/note -help</code> — full usage breakdown including the context form fields</li>
+      <li>Natural-language prompt: <em>"Create a note titled 'Q3 retro' with these bullets..."</em> — the agent picks <code>create_note</code> on its own</li>
+    </ul>
+
+    <h3>5. Cross-MCP chains</h3>
+    <p>Combine with the bundled MCPs the agent already has:</p>
+    <ul>
+      <li><em>"Take a screenshot, save it as a note titled 'design idea'"</em> → <code>studio-core.screenshot</code> → <code>notes.create_note</code></li>
+      <li><em>"Find my notes about 'rust' and append my git status to each"</em> → <code>notes.search_notes</code> → <code>notes.get_note</code> × N → <code>git.status</code> → <code>notes.update_note</code> × N</li>
+      <li><em>"Open my last note in Chrome"</em> → <code>notes.list_notes</code> → <code>chrome.open(notesUrl/{id})</code></li>
+    </ul>
+    <p>You write 5 tools; the agent wires them into multi-step flows that touch any combination of installed MCPs.</p>
+
+    <h3>6. Publish</h3>
+    <pre><code>git init && git add . && git commit -m "Initial Notes MCP"
+git remote add origin https://github.com/you/notes-mcp.git
+git push -u origin main</code></pre>
+    <p>Share the URL with users: <code>/install https://github.com/you/notes-mcp</code></p>
+
+    <h2 id="local-dev">Local development</h2>
+    <p>Iterate without pushing to git:</p>
+    <pre><code># From anywhere
+/install /path/to/your-mcp
+
+# Or from the CLI
+node apps/cli/dist/index.js install --path /path/to/your-mcp</code></pre>
+    <p>Studio records a <code>.source</code> marker pointing at your repo. Every read of the manifest goes through the source dir — so you can edit <code>widget.manifest.json</code> and see changes on the next <code>/mcp-servers</code> without re-installing. Rebuild your dist/ when you change source code; the next tool call picks up the new binary.</p>
+    <p>To verify a build works against the live host:</p>
+    <pre><code>node apps/cli/dist/index.js call &lt;your-id&gt;.&lt;tool-name&gt; '{"key":"value"}'</code></pre>
+
+    <h2 id="publishing">Publishing</h2>
+    <ol>
+      <li>Push your repo to GitHub (any visibility).</li>
+      <li>Tag a release matching your <code>version</code>.</li>
+      <li>Share the URL: <code>/install https://github.com/your-org/your-mcp</code></li>
+    </ol>
+    <p>Studio clones with <code>--depth=1</code> at the default branch. Bump <code>version</code> on every release. Major bumps re-prompt for permissions; minor / patch don't.</p>
+  </main>
+</div>
+</body>
+</html>
