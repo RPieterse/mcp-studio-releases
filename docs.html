@@ -200,10 +200,18 @@
       <tr><td><code>/mcp-servers</code></td><td>List installed MCPs (use <code>-name &lt;id&gt;</code> to drill into one)</td></tr>
       <tr><td><code>/install &lt;git-url-or-path&gt;</code></td><td>Install a new MCP from git or a local directory</td></tr>
       <tr><td><code>/configure [mcp-id]</code></td><td>Open settings, optionally focused on an MCP</td></tr>
+      <tr><td><code>/tab [list|new|switch|close|rename]</code></td><td>Multi-session tabs — each tab has its own transcript, agent memory, and project pointer</td></tr>
       <tr><td><code>/transparency &lt;0–100&gt;</code></td><td>Panel opacity (also <code>+N</code> / <code>-N</code> deltas)</td></tr>
       <tr><td><code>/clear</code></td><td>Clear the transcript</td></tr>
       <tr><td><code>/hide</code></td><td>Close the panel</td></tr>
     </table>
+
+    <h2 id="tabs">Tabs</h2>
+    <p>Each tab is an independent agent session — its own transcript, its own conversation memory (<code>priorMessages</code>), its own active project, and its own per-project MCP storage. App-level settings (provider, model, installed MCPs, keychain, transparency) are shared.</p>
+    <p>Open a new tab with <code>/tab new [name]</code> or <kbd>Cmd</kbd>-<kbd>T</kbd>. Close with <code>/tab close</code> or <kbd>Cmd</kbd>-<kbd>W</kbd> (the last tab resets instead of closing). Switch with <code>/tab switch &lt;name-or-number&gt;</code>, <kbd>Cmd</kbd>-<kbd>1</kbd>..<kbd>9</kbd>, or <kbd>Cmd</kbd>-<kbd>Shift</kbd>-<kbd>[</kbd> / <kbd>Cmd</kbd>-<kbd>Shift</kbd>-<kbd>]</kbd> to cycle. The tab strip auto-hides when only one tab exists.</p>
+    <p><strong>Per-project MCP storage.</strong> When a tab is in a project (<code>/project switch foo</code>), MCP storage reads merge a per-project overlay on top of the global file. Writes from <code>storage_action</code> quick commands route to the overlay. This lets <code>/workspace</code> in tab A's project <code>foo</code> set a different Git workspace than tab B's project <code>bar</code> — Studio's <strong>Settings → MCP Servers</strong> shows both panels (global + Project overrides) when a project is active.</p>
+    <p>Files: global storage at <code>~/.mcp-widget/storage/&lt;mcp_id&gt;.json</code>, project overlay at <code>~/.mcp-widget/projects/&lt;slug&gt;/mcp-storage/&lt;mcp_id&gt;.json</code>. Overlay wins per-field; missing overlay keys fall through to global.</p>
+    <p><em>Caveats:</em> tabs aren't persisted across app launches yet. Agent-mediated tool calls (where the LLM picks tools without quick-command interpolation) still read the global storage view — the agent doesn't know which tab's project it's in. Quick commands honor the overlay correctly.</p>
 
     <h2 id="agent">AI agent</h2>
     <p>Natural-language prompts (no leading <code>/</code>) go to the configured LLM provider. The provider receives every installed MCP's tools as a single catalog and chains across them freely. Configure in <strong>Settings → AI Agent</strong>.</p>
