@@ -266,7 +266,8 @@
     <h2 id="installing">Installing MCPs</h2>
     <pre><code>/install https://github.com/your-org/your-mcp
 /install /Users/you/code/your-mcp     # local dev path</code></pre>
-    <p>Studio clones (or symlinks if local), validates the manifest, runs install hooks, and asks for any declared permissions.</p>
+    <p>Studio clones (or symlinks if local), validates the manifest, and runs install hooks. A <em>Cloning + installing from &lt;source&gt;…</em> indicator stays in the transcript until the hooks finish (this can take a minute for an MCP that runs <code>npm install</code> + <code>npm run build</code>), then it resolves to <code>installed &lt;id&gt; (&lt;version&gt;)</code>.</p>
+    <p>If the manifest declares <code>auth</code> of type <code>api_key</code>, <code>oauth2</code>, or <code>oauth2_pkce</code>, Studio opens <strong>Settings → MCP Servers</strong> focused on the new server so you can fill in the credentials before using it. MCPs with <code>auth: { type: "none" }</code> (or no auth block) are usable immediately.</p>
     <p>To uninstall an MCP, open <strong>Settings → MCP Servers</strong>, expand the row, and click <strong>Uninstall</strong>. The bundled MCPs below (Chrome, Claude Code, Filesystem, Git, Studio Core) are locked — they ship with Studio and can't be removed.</p>
 
     <h1 style="margin-top: 56px">Built-in MCPs</h1>
