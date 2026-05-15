@@ -162,6 +162,7 @@
     <a href="#slash">Slash commands</a>
     <a href="#agent">AI agent</a>
     <a href="#voice">Voice</a>
+    <a href="#projects">Projects</a>
     <a href="#schedules">Schedules</a>
     <a href="#builder">MCP Builder</a>
     <a href="#installing">Installing MCPs</a>
@@ -201,6 +202,7 @@
       <tr><td><code>/mcp-servers</code></td><td>List installed MCPs (use <code>-name &lt;id&gt;</code> to drill into one)</td></tr>
       <tr><td><code>/install &lt;git-url-or-path&gt;</code></td><td>Install a new MCP from git or a local directory</td></tr>
       <tr><td><code>/configure [mcp-id]</code></td><td>Open settings, optionally focused on an MCP</td></tr>
+      <tr><td><code>/project [new|switch|delete|end]</code></td><td>Persistent conversation contexts — see <a href="#projects">Projects</a></td></tr>
       <tr><td><code>/build-mcp [new|load|switch|remove]</code></td><td>Open the MCP Builder — scaffold, load, or manage local MCPs you're authoring</td></tr>
       <tr><td><code>/tab [list|new|switch|close|rename]</code></td><td>Multi-session tabs — each tab has its own transcript, agent memory, and project pointer</td></tr>
       <tr><td><code>/transparency &lt;0–100&gt;</code></td><td>Panel opacity (also <code>+N</code> / <code>-N</code> deltas)</td></tr>
@@ -245,6 +247,18 @@
     </table>
     <p>You can call these directly with <code>/panel_show</code>, <code>/panel_hide</code>, <code>/panel_toggle</code>, and <code>/fab</code>, or just ask the agent: <em>"hide yourself, screenshot my screen, then come back and tell me what's on it."</em></p>
     <p>Third-party MCPs get the same access — Studio injects <code>MCP_WIDGET_HOST_PORT</code> and <code>MCP_WIDGET_HOST_TOKEN</code> env vars at spawn. POST to <code>http://127.0.0.1:&lt;port&gt;/panel/show</code> (etc.) with <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+
+    <h2 id="projects">Projects</h2>
+    <p>A project keeps your transcript + agent memory together across panel close, app restart, and tab switches. Ephemeral chats reset on tab close; projects persist on disk at <code>~/.mcp-widget/projects/&lt;slug&gt;/</code>.</p>
+    <table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>/project</code></td><td>List every project, marking the active one with <code>*</code></td></tr>
+      <tr><td><code>/project new &lt;name&gt;</code></td><td>Create + switch to a fresh project. Transcript clears, memory clears.</td></tr>
+      <tr><td><code>/project switch &lt;name&gt;</code></td><td>Switch to an existing project; its transcript and agent memory reload.</td></tr>
+      <tr><td><code>/project delete &lt;slug&gt;</code></td><td>Delete a project's directory entirely — transcript, agent context, schedule fires, MCP storage overlays. Slug is what's shown in parentheses in the <code>/project</code> list. If you delete the active project the current tab resets to ephemeral.</td></tr>
+      <tr><td><code>/project end</code> (or <code>/project close</code>)</td><td>Leave the current project. The tab becomes ephemeral again; the project itself stays on disk.</td></tr>
+    </table>
+    <p>Project context is <strong>per-tab</strong>. Tab A can be in project <code>foo</code> while tab B is in project <code>bar</code> — each tab's storage reads merge its own project overlay on top of global.</p>
 
     <h2 id="schedules">Schedules</h2>
     <p>Run prompts automatically at a future time or on a recurring interval. Each fired schedule looks identical to typing the prompt and hitting send — your configured agent handles it.</p>
