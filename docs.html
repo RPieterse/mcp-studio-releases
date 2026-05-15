@@ -6,10 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content="Slash commands, manifest contract, quick commands, auth, storage, and the full Notes-MCP walkthrough for MCP Studio." />
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
 <style>
   :root {
     --bg: #0a0b13;
@@ -24,13 +20,13 @@
     --accent-soft: #8b5cf6;
     --code-bg: rgba(255,255,255,0.06);
     --link: #a5b4fc;
-    /* Typewriter everywhere: all three font slots resolve to the same
-       monospace stack. The serif/sans aliases are kept so the existing
-       per-element font-family rules (h1/h2 use --serif, h3/body use --sans,
-       headers + table headers + code use --mono) all unify visually. */
-    --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, "Menlo", "Consolas", monospace;
-    --serif: var(--mono);
-    --sans:  var(--mono);
+    /* Clean readable stack. System sans for body + headings (SF on macOS,
+       Segoe on Windows — both crisp, no calligraphic flourishes, no wavy
+       descenders). Monospace stack reserved for code and small technical
+       UI bits (top bar, table headers, pills). No web font loads needed. */
+    --sans:  -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono:  ui-monospace, SFMono-Regular, "Menlo", "Consolas", "Liberation Mono", monospace;
+    --serif: var(--sans);
   }
   * { box-sizing: border-box }
   body {
@@ -63,7 +59,7 @@
       linear-gradient(140deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
     box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 20px rgba(139, 92, 246, 0.45);
   }
-  .top__brand .name { font-family: var(--serif); font-weight: 500; font-size: 15px; letter-spacing: 0; }
+  .top__brand .name { font-family: var(--sans); font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
   .top__brand .name em { font-style: italic; font-weight: 400; color: var(--muted); }
   .top__nav { display: flex; gap: 24px; align-items: center; color: var(--muted); }
   .top__nav a { color: var(--muted); transition: color 120ms; text-decoration: none; border-bottom: none; }
@@ -93,19 +89,16 @@
   nav.side a:hover { color: var(--text); transform: translateX(2px); }
 
   main { padding: 56px 64px; max-width: 880px; min-width: 0; }
-  /* Headings now monospace via --serif/--sans → --mono. Negative
-     letter-spacing was tuned for a variable serif and looks cramped in
-     mono; reset to 0 so the glyphs sit naturally on their grid. */
-  h1 { font-family: var(--serif); font-weight: 500;
-    font-size: 36px; letter-spacing: 0; margin: 0 0 12px; line-height: 1.15; }
+  h1 { font-family: var(--sans); font-weight: 700;
+    font-size: 38px; letter-spacing: -0.015em; margin: 0 0 12px; line-height: 1.15; }
   h2 {
-    font-family: var(--serif); font-weight: 500;
-    font-size: 24px; letter-spacing: 0; margin: 48px 0 16px;
+    font-family: var(--sans); font-weight: 600;
+    font-size: 24px; letter-spacing: -0.01em; margin: 48px 0 16px;
     padding-top: 32px; border-top: 1px solid var(--border); line-height: 1.25;
   }
   h2:first-of-type { border-top: none; padding-top: 0 }
-  h3 { font-family: var(--sans); font-size: 14px; font-weight: 600; margin: 28px 0 8px;
-    color: var(--accent); letter-spacing: 0.04em; text-transform: uppercase; }
+  h3 { font-family: var(--sans); font-size: 13px; font-weight: 600; margin: 28px 0 8px;
+    color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; }
   p, li { color: var(--text); opacity: 0.88; font-weight: 300; font-size: 15.5px; line-height: 1.65; }
   ul, ol { padding-left: 22px }
   li { margin: 4px 0; }
