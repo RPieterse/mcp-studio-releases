@@ -8,403 +8,437 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,700&display=swap" rel="stylesheet" />
 
 <style>
   :root {
     --ink:        #0a0b13;
-    --ink-soft:   #11131e;
-    --ink-rule:   rgba(244, 244, 248, 0.08);
-    --ink-rule-2: rgba(244, 244, 248, 0.16);
+    --ink-1:      #11131e;
+    --rule:       rgba(244, 244, 248, 0.10);
+    --rule-2:     rgba(244, 244, 248, 0.18);
     --text:       #f4f4f8;
-    --muted:      rgba(244, 244, 248, 0.55);
-    --muted-2:    rgba(244, 244, 248, 0.38);
+    --muted:      rgba(244, 244, 248, 0.66);
+    --muted-2:    rgba(244, 244, 248, 0.42);
     --accent:     #c4b5fd;
     --pink:       #ec4899;
     --violet:     #8b5cf6;
     --indigo:     #6366f1;
-    --serif:  "Fraunces", "Times New Roman", serif;
-    --sans:   "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --mono:   "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    --green:      #4ade80;
+    --mono:       "JetBrains Mono", ui-monospace, SFMono-Regular, "Menlo", monospace;
   }
 
   *, *::before, *::after { box-sizing: border-box; }
 
   html, body { margin: 0; padding: 0; background: var(--ink); color: var(--text); }
   body {
-    font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.55;
+    font-family: var(--mono);
+    font-size: 14.5px;
+    line-height: 1.65;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background:
-      radial-gradient(1200px 700px at 80% -10%, rgba(139, 92, 246, 0.10), transparent 65%),
-      radial-gradient(900px 600px at -10% 120%, rgba(236, 72, 153, 0.07), transparent 60%),
+      radial-gradient(1100px 700px at 80% -8%, rgba(139, 92, 246, 0.08), transparent 65%),
+      radial-gradient(900px 600px at -8% 105%, rgba(236, 72, 153, 0.05), transparent 60%),
       var(--ink);
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* Subtle film grain for atmospheric depth */
+  /* Film grain */
   body::before {
-    content: "";
-    position: fixed; inset: 0; pointer-events: none; z-index: 1000;
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1000;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-    opacity: 0.6;
+    opacity: 0.55;
     mix-blend-mode: overlay;
   }
 
   a { color: inherit; text-decoration: none; }
   ::selection { background: rgba(196, 181, 253, 0.35); color: white; }
 
-  /* ============================================================ */
-  /* HEADER                                                       */
-  /* ============================================================ */
-  .container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
 
+  /* ============================================================ */
+  /* TOP BAR                                                      */
+  /* ============================================================ */
   header.top {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(10, 11, 19, 0.72);
-    backdrop-filter: saturate(120%) blur(14px);
-    -webkit-backdrop-filter: saturate(120%) blur(14px);
-    border-bottom: 1px solid var(--ink-rule);
+    background: rgba(10, 11, 19, 0.75);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-bottom: 1px solid var(--rule);
   }
   .top__inner {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 0;
-    font-family: var(--mono);
+    padding: 16px 0;
     font-size: 12px;
-    letter-spacing: 0.04em;
   }
-  .top__brand {
+  .brand {
     display: flex; align-items: center; gap: 12px;
-    color: var(--text);
+    color: var(--text); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.04em;
   }
-  .top__brand .mark { width: 18px; height: 18px; border-radius: 50%;
+  .brand .mark { width: 18px; height: 18px; border-radius: 50%;
     background:
-      radial-gradient(120% 120% at 30% 25%, rgba(255, 255, 255, 0.45), transparent 55%),
+      radial-gradient(120% 120% at 30% 25%, rgba(255,255,255,0.45), transparent 55%),
       linear-gradient(140deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 20px rgba(139, 92, 246, 0.45);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 16px rgba(139, 92, 246, 0.45);
   }
-  .top__brand .name { font-family: var(--serif); font-weight: 500; font-size: 17px;
-    letter-spacing: -0.01em; text-transform: none; }
-  .top__brand .name em { font-style: italic; font-weight: 400; color: var(--muted); }
+  .brand span.sub { color: var(--muted); font-weight: 400; }
 
-  .top__nav { display: flex; gap: 28px; align-items: center; color: var(--muted); }
-  .top__nav a { transition: color 120ms ease; }
+  .top__nav { display: flex; gap: 24px; align-items: center; color: var(--muted); }
+  .top__nav a {
+    text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; font-size: 11.5px;
+    transition: color 120ms ease;
+  }
   .top__nav a:hover { color: var(--text); }
   .top__nav .pill {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 5px 10px; border: 1px solid var(--ink-rule-2); border-radius: 999px;
-    font-size: 11px; color: var(--muted);
+    padding: 5px 10px; border: 1px solid var(--rule-2); border-radius: 999px;
+    font-size: 11px; color: var(--muted); font-weight: 500;
   }
-  .top__nav .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80;
-    box-shadow: 0 0 10px rgba(74, 222, 128, 0.7); }
+  .top__nav .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.65); }
 
   /* ============================================================ */
-  /* HERO                                                         */
+  /* HERO — single column, centered                               */
   /* ============================================================ */
   .hero {
-    position: relative;
-    padding: 120px 0 88px;
-    border-bottom: 1px solid var(--ink-rule);
-    overflow: hidden;
-  }
-
-  /* Hairline guide grid */
-  .hero::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background-image:
-      linear-gradient(to right, var(--ink-rule) 1px, transparent 1px);
-    background-size: calc(100% / 12) 100%;
-    background-position: 48px 0;
-    opacity: 0.6;
-    mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
-  }
-
-  .hero__grid {
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 80px;
-    align-items: center;
+    text-align: center;
+    padding: 96px 0 80px;
+    border-bottom: 1px solid var(--rule);
     position: relative;
   }
 
-  .hero__marker {
-    font-family: var(--mono); font-size: 11px; color: var(--muted-2);
-    letter-spacing: 0.14em; text-transform: uppercase;
-    display: flex; align-items: center; gap: 12px;
-    margin: 0 0 32px;
+  .hero__pre {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11px; color: var(--muted-2);
+    text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500;
+    margin: 0 0 28px;
   }
-  .hero__marker::after { content: ""; flex: 1; height: 1px; background: var(--ink-rule); max-width: 80px; }
+  .hero__pre::before, .hero__pre::after {
+    content: ""; display: block; width: 40px; height: 1px; background: var(--rule-2);
+  }
 
   .hero__title {
-    font-family: var(--serif);
-    font-weight: 350;
-    font-size: clamp(56px, 8.4vw, 132px);
-    line-height: 0.94;
-    letter-spacing: -0.035em;
-    margin: 0 0 24px;
-    font-variation-settings: "opsz" 144;
+    font-weight: 800;
+    font-size: clamp(40px, 6vw, 88px);
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 0 0 18px;
+    text-transform: uppercase;
   }
-  .hero__title em {
-    font-style: italic;
-    font-weight: 300;
-    background: linear-gradient(125deg, #c4b5fd 0%, #f9a8d4 60%, #fbbf24 100%);
+  .hero__title .accent {
+    background: linear-gradient(125deg, #6366f1 0%, #8b5cf6 45%, #ec4899 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .hero__lead {
-    font-size: 19px; line-height: 1.5; color: var(--muted);
-    max-width: 520px; margin: 0 0 40px;
-    font-weight: 300;
+    font-size: 15.5px; line-height: 1.65; color: var(--muted);
+    max-width: 56ch; margin: 0 auto 40px;
+    font-weight: 400;
   }
-  .hero__lead strong { color: var(--text); font-weight: 500; }
+  .hero__lead strong { color: var(--text); font-weight: 600; }
 
   /* Download card */
   .dl {
-    border: 1px solid var(--ink-rule-2);
-    border-radius: 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0));
-    padding: 24px;
-    max-width: 540px;
-    position: relative;
-    overflow: hidden;
+    border: 1px solid var(--rule-2);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+    padding: 22px;
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: left;
+    position: relative; overflow: hidden;
   }
   .dl::before {
     content: ""; position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(380px 200px at 100% 0%, rgba(139, 92, 246, 0.18), transparent 70%);
   }
-  .dl__row { display: flex; align-items: center; gap: 16px; position: relative; }
+
   .dl__cta {
-    flex: 1;
+    width: 100%;
     display: inline-flex; align-items: center; justify-content: space-between; gap: 18px;
     padding: 18px 22px;
-    border: none; cursor: pointer;
-    border-radius: 10px;
-    color: white;
-    font-family: var(--sans); font-size: 16px; font-weight: 500;
+    border: none; cursor: pointer; border-radius: 10px; color: white;
+    font-family: var(--mono);
     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
     box-shadow: 0 12px 40px -8px rgba(139, 92, 246, 0.55),
                 inset 0 1px 0 rgba(255,255,255,0.18);
     transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
-    text-align: left;
+    text-align: left; position: relative;
   }
   .dl__cta:hover { transform: translateY(-1px);
     box-shadow: 0 16px 48px -8px rgba(139, 92, 246, 0.7), inset 0 1px 0 rgba(255,255,255,0.22);
     filter: brightness(1.05);
   }
-  .dl__cta .arr { font-family: var(--mono); opacity: 0.85; transition: transform 140ms ease; }
+  .dl__cta .arr { font-weight: 600; opacity: 0.9; transition: transform 140ms ease; }
   .dl__cta:hover .arr { transform: translateX(3px); }
-
-  .dl__cta .lbl { display: flex; flex-direction: column; gap: 2px; }
-  .dl__cta .lbl .top-line { font-family: var(--mono); font-size: 11px; opacity: 0.75; letter-spacing: 0.06em; text-transform: uppercase; }
-  .dl__cta .lbl .main { font-size: 16px; font-weight: 500; letter-spacing: -0.005em; }
+  .dl__cta .lbl { display: flex; flex-direction: column; gap: 3px; }
+  .dl__cta .lbl .top-line { font-size: 10.5px; opacity: 0.78; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+  .dl__cta .lbl .main { font-size: 16px; font-weight: 600; letter-spacing: -0.005em; }
 
   .dl__meta {
-    margin-top: 16px;
-    display: flex; gap: 18px;
-    font-family: var(--mono); font-size: 11px; color: var(--muted-2);
-    letter-spacing: 0.04em;
-    flex-wrap: wrap;
+    margin-top: 14px;
+    display: flex; gap: 16px;
+    font-size: 11px; color: var(--muted-2);
+    letter-spacing: 0.05em; flex-wrap: wrap;
   }
   .dl__meta span strong { color: var(--muted); font-weight: 500; }
 
   .dl__alt {
-    margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--ink-rule-2);
-    display: flex; flex-wrap: wrap; gap: 6px 18px;
-    font-family: var(--mono); font-size: 12px; color: var(--muted-2);
+    margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--rule-2);
+    display: flex; flex-wrap: wrap; gap: 4px 14px;
+    font-size: 11.5px; color: var(--muted-2);
   }
   .dl__alt a {
-    color: var(--muted); border-bottom: 1px solid transparent; transition: color 120ms, border-color 120ms;
-    padding-bottom: 1px;
+    color: var(--muted); border-bottom: 1px solid transparent;
+    transition: color 120ms, border-color 120ms; padding-bottom: 1px;
   }
-  .dl__alt a:hover { color: var(--text); border-bottom-color: var(--ink-rule-2); }
-  .dl__alt .sep { color: var(--ink-rule-2); }
+  .dl__alt a:hover { color: var(--text); border-bottom-color: var(--rule-2); }
+  .dl__alt .sep { color: var(--rule-2); }
 
-  /* Hero stage — the FAB as photographed object */
-  .stage {
+  /* ============================================================ */
+  /* PRODUCT SHOT — actual widget visualization                   */
+  /* ============================================================ */
+  .product {
+    padding: 96px 0 88px;
+    border-bottom: 1px solid var(--rule);
+    text-align: center;
+  }
+
+  .product__caption {
+    font-size: 11px; color: var(--muted-2);
+    text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500;
+    margin: 0 0 12px;
+  }
+  .product__caption span { color: var(--accent); }
+  .product__title {
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-weight: 600; letter-spacing: -0.02em;
+    margin: 0 0 56px; color: var(--text);
+  }
+  .product__title em { color: var(--muted); font-style: normal; font-weight: 400; }
+
+  .scene {
     position: relative;
-    aspect-ratio: 1 / 1;
-    max-width: 540px;
-    margin-left: auto;
+    display: flex; align-items: flex-start; justify-content: center;
+    gap: 64px; max-width: 880px; margin: 0 auto;
+    padding: 24px 0;
+    flex-wrap: wrap;
   }
-  .stage__rule {
-    position: absolute; inset: 0; pointer-events: none;
-    border: 1px solid var(--ink-rule);
-    border-radius: 50%;
-    opacity: 0.7;
-  }
-  .stage__rule.r1 { inset: 4%;  animation: spin 90s linear infinite; }
-  .stage__rule.r2 { inset: 14%; animation: spin 60s linear infinite reverse; opacity: 0.5; }
-  .stage__rule.r3 { inset: 26%; animation: spin 120s linear infinite; opacity: 0.3; }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
-  .stage__ticks {
-    position: absolute; inset: 0; pointer-events: none;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
-    color: var(--muted-2);
+  /* The actual FAB rendered large */
+  .scene__fab-wrap {
+    position: relative; flex-shrink: 0;
+    padding: 30px;
   }
-  .stage__ticks span { position: absolute; }
-  .stage__ticks .t-n { top: 0; left: 50%; transform: translate(-50%, -150%); }
-  .stage__ticks .t-e { top: 50%; right: 0; transform: translate(150%, -50%); }
-  .stage__ticks .t-s { bottom: 0; left: 50%; transform: translate(-50%, 150%); }
-  .stage__ticks .t-w { top: 50%; left: 0; transform: translate(-150%, -50%); }
+  .scene__fab-wrap::before, .scene__fab-wrap::after {
+    content: ""; position: absolute;
+    border: 1px solid var(--rule); border-radius: 50%; pointer-events: none;
+  }
+  .scene__fab-wrap::before { inset: 0; opacity: 0.7; }
+  .scene__fab-wrap::after  { inset: 14px; opacity: 0.4; }
 
-  .stage__fab {
-    position: absolute; inset: 0; margin: auto;
-    width: 56%; aspect-ratio: 1/1; border-radius: 50%;
+  .scene__fab {
+    width: 140px; height: 140px; border-radius: 50%;
     background:
       radial-gradient(120% 120% at 28% 22%, rgba(255,255,255,0.55), transparent 55%),
       linear-gradient(140deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
     box-shadow:
       0 0 0 1px rgba(255,255,255,0.06) inset,
-      0 0 80px rgba(139, 92, 246, 0.4),
-      0 60px 140px -20px rgba(236, 72, 153, 0.35),
-      0 30px 90px -10px rgba(99, 102, 241, 0.4);
+      0 0 80px rgba(139, 92, 246, 0.5),
+      0 40px 100px -10px rgba(236, 72, 153, 0.4),
+      0 30px 60px -5px rgba(99, 102, 241, 0.4);
     animation: float 9s ease-in-out infinite;
-  }
-  .stage__fab::after {
-    content: ""; position: absolute; inset: -40%; pointer-events: none;
-    background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.18), transparent 60%);
-    z-index: -1;
+    position: relative;
   }
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-14px); }
+    50%      { transform: translateY(-10px); }
   }
 
-  /* Annotation lines and labels around the FAB */
-  .stage__anno {
-    position: absolute; font-family: var(--mono); font-size: 10px;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-2);
-    line-height: 1.45;
+  .scene__fab-label {
+    margin-top: 24px; font-size: 10.5px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.16em; font-weight: 500;
   }
-  .stage__anno .ll { display: block; color: var(--muted); }
-  .stage__anno .v  { display: block; color: var(--accent); font-size: 11px; }
-  .stage__anno.a1 { top: 14%; left: -6%; text-align: right; }
-  .stage__anno.a1::after { content: ""; display: block; width: 70px; height: 1px; background: var(--ink-rule-2); margin: 6px 0 0 auto; }
-  .stage__anno.a2 { top: 68%; right: -4%; }
-  .stage__anno.a2::before { content: ""; display: block; width: 70px; height: 1px; background: var(--ink-rule-2); margin: 0 0 6px 0; }
-  .stage__anno.a3 { bottom: 4%; left: 18%; }
-  .stage__anno.a3::before { content: ""; display: block; width: 1px; height: 40px; background: var(--ink-rule-2); margin: -40px 0 6px 6px; }
+  .scene__fab-label .v { color: var(--accent); display: block; font-size: 11px; }
 
-  @media (max-width: 980px) {
-    .hero__grid { grid-template-columns: 1fr; gap: 56px; }
-    .stage { max-width: 380px; margin: 0 auto; }
+  /* Arrow */
+  .scene__arrow {
+    align-self: center; padding-top: 80px;
+    color: var(--muted-2); font-size: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .scene__arrow::before { content: ""; display: block; width: 28px; height: 1px; background: var(--rule-2); }
+  .scene__arrow::after  { content: ""; display: block; width: 0; height: 0;
+    border-left: 7px solid var(--rule-2);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+
+  /* Mocked panel — looks like the actual app panel */
+  .panel-mock {
+    width: 360px;
+    border: 1px solid var(--rule-2);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(20, 22, 32, 0.95), rgba(15, 16, 24, 0.9));
+    box-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255,255,255,0.04) inset;
+    overflow: hidden;
+    text-align: left;
+    font-size: 12.5px;
+    flex-shrink: 0;
+  }
+  .panel-mock__title {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 14px; border-bottom: 1px solid var(--rule);
+    font-size: 10.5px; color: var(--muted-2);
+    text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;
+  }
+  .panel-mock__title .d { width: 7px; height: 7px; border-radius: 50%; background: var(--rule-2); }
+  .panel-mock__title .d.r { background: rgba(236, 72, 153, 0.6); }
+  .panel-mock__title .d.y { background: rgba(251, 191, 36, 0.6); }
+  .panel-mock__title .d.g { background: rgba(74, 222, 128, 0.6); }
+  .panel-mock__title .t { margin-left: 6px; }
+
+  .panel-mock__body { padding: 14px 14px 6px; }
+  .panel-mock__line { padding: 6px 8px; border-radius: 6px; color: var(--muted); font-size: 12px;
+    display: flex; gap: 10px; align-items: baseline; }
+  .panel-mock__line .you { color: var(--accent); font-weight: 600; flex-shrink: 0; width: 44px; }
+  .panel-mock__line .out { color: var(--muted); flex: 1; }
+  .panel-mock__line .out b { color: var(--text); font-weight: 500; }
+  .panel-mock__line.is-cmd .out { color: var(--text); font-weight: 500; }
+  .panel-mock__sep { height: 1px; background: var(--rule); margin: 6px 0; }
+
+  .panel-mock__input {
+    margin: 12px 10px 12px; padding: 10px 12px;
+    border: 1px solid var(--rule-2); border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    color: var(--muted-2); font-size: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-mock__input::after { content: ""; width: 1px; height: 14px; background: var(--accent);
+    animation: blink 1.05s steps(1) infinite; }
+  @keyframes blink { 50% { background: transparent; } }
+
+  @media (max-width: 760px) {
+    .scene { flex-direction: column; align-items: center; gap: 24px; }
+    .scene__arrow { transform: rotate(90deg); padding-top: 0; }
     .container { padding: 0 24px; }
-    .hero { padding: 80px 0 56px; }
+    .hero { padding: 64px 0 56px; }
+    .product { padding: 64px 0 56px; }
   }
 
   /* ============================================================ */
-  /* SPECIMEN GRID                                                */
+  /* SECTIONS — feature grid                                      */
   /* ============================================================ */
-  .section { padding: 120px 0; border-bottom: 1px solid var(--ink-rule); position: relative; }
+  .section { padding: 96px 0; border-bottom: 1px solid var(--rule); position: relative; }
   .section__head {
-    display: grid; grid-template-columns: 200px 1fr; gap: 48px; align-items: end;
-    margin-bottom: 64px;
+    display: grid; grid-template-columns: 180px 1fr; gap: 48px; align-items: end;
+    margin-bottom: 56px;
   }
-  .section__marker { font-family: var(--mono); font-size: 11px; color: var(--muted-2);
-    letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.5; }
-  .section__marker b { display: block; color: var(--text); font-weight: 500; margin-bottom: 6px; font-size: 12px; }
+  .section__marker {
+    font-size: 10.5px; color: var(--muted-2);
+    letter-spacing: 0.18em; text-transform: uppercase; line-height: 1.6;
+    font-weight: 500;
+  }
+  .section__marker b { display: block; color: var(--text); font-weight: 700; margin-bottom: 6px; font-size: 11.5px; }
   .section__title {
-    font-family: var(--serif); font-weight: 350; font-variation-settings: "opsz" 144;
-    font-size: clamp(36px, 4.6vw, 64px); line-height: 1.02; letter-spacing: -0.025em;
-    margin: 0; max-width: 18ch;
+    font-weight: 700; font-size: clamp(26px, 3.4vw, 40px);
+    line-height: 1.1; letter-spacing: -0.025em; margin: 0;
+    text-transform: uppercase; max-width: 22ch;
   }
-  .section__title em { font-style: italic; font-weight: 300; color: var(--muted); }
+  .section__title em { color: var(--muted); font-style: normal; font-weight: 400; text-transform: none; }
 
   .specimens {
     display: grid; grid-template-columns: repeat(6, 1fr); gap: 0;
-    border-top: 1px solid var(--ink-rule);
+    border-top: 1px solid var(--rule);
   }
   .specimen {
-    grid-column: span 3;
-    padding: 40px 32px 36px;
-    border-right: 1px solid var(--ink-rule);
-    border-bottom: 1px solid var(--ink-rule);
+    grid-column: span 2;
+    padding: 36px 28px 32px;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
     position: relative;
+    min-height: 240px;
     transition: background 240ms ease;
-    min-height: 280px;
   }
   .specimen:hover { background: rgba(255,255,255,0.014); }
   .specimen:nth-child(3n) { border-right: none; }
-  .specimen.span-2 { grid-column: span 2; }
-  .specimen.span-4 { grid-column: span 4; }
-  .specimen.span-6 { grid-column: span 6; }
+  .specimen.span-3 { grid-column: span 3; }
+  .specimen.span-6 { grid-column: span 6; border-right: none; }
+  .specimen.span-3:nth-of-type(odd) { border-right: 1px solid var(--rule); }
 
   .specimen__no {
-    font-family: var(--mono); font-size: 11px; color: var(--accent);
-    letter-spacing: 0.14em; margin-bottom: 24px;
+    font-size: 10.5px; color: var(--accent);
+    letter-spacing: 0.14em; margin-bottom: 22px; font-weight: 600;
     display: flex; align-items: center; gap: 12px;
   }
-  .specimen__no .bar { flex: 1; height: 1px; background: var(--ink-rule); }
+  .specimen__no .bar { flex: 1; height: 1px; background: var(--rule); }
 
   .specimen__name {
-    font-family: var(--serif); font-weight: 350; font-variation-settings: "opsz" 144;
-    font-size: 30px; letter-spacing: -0.02em; line-height: 1.05;
-    margin: 0 0 14px;
+    font-size: 19px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2;
+    margin: 0 0 10px; text-transform: uppercase;
   }
-  .specimen__name em { font-style: italic; color: var(--muted); font-weight: 300; }
+  .specimen__name em { color: var(--muted); font-style: normal; font-weight: 400; text-transform: none; }
 
-  .specimen__body { color: var(--muted); font-size: 15px; line-height: 1.55; max-width: 42ch; font-weight: 300; }
-  .specimen__body code { font-family: var(--mono); font-size: 12.5px; color: var(--accent); background: rgba(196, 181, 253, 0.06); padding: 1px 6px; border-radius: 3px; }
+  .specimen__body { color: var(--muted); font-size: 13.5px; line-height: 1.65; max-width: 44ch; }
+  .specimen__body code { font-size: 12px; color: var(--accent); background: rgba(196, 181, 253, 0.06); padding: 1px 6px; border-radius: 3px; }
+  .specimen__body strong { color: var(--text); font-weight: 600; }
 
   @media (max-width: 980px) {
     .specimens { grid-template-columns: 1fr; }
-    .specimen, .specimen.span-2, .specimen.span-4, .specimen.span-6 {
+    .specimen, .specimen.span-3, .specimen.span-6 {
       grid-column: span 1; border-right: none !important;
     }
     .section__head { grid-template-columns: 1fr; gap: 16px; }
-    .section { padding: 72px 0; }
+    .section { padding: 64px 0; }
   }
 
   /* ============================================================ */
   /* BUNDLED MCPS                                                 */
   /* ============================================================ */
   .mcps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;
-    border-top: 1px solid var(--ink-rule); }
+    border-top: 1px solid var(--rule); }
   .mcp {
-    padding: 32px 24px 28px;
-    border-right: 1px solid var(--ink-rule);
+    padding: 28px 22px 24px;
+    border-right: 1px solid var(--rule);
     position: relative;
   }
   .mcp:last-child { border-right: none; }
-  .mcp__id { font-family: var(--mono); font-size: 10px; color: var(--muted-2);
-    letter-spacing: 0.06em; margin-bottom: 16px; }
-  .mcp__name {
-    font-family: var(--serif); font-weight: 350; font-size: 24px; letter-spacing: -0.02em;
-    margin: 0 0 8px;
-  }
-  .mcp__desc { color: var(--muted); font-size: 13.5px; line-height: 1.5; font-weight: 300; }
+  .mcp__id { font-size: 10px; color: var(--muted-2); letter-spacing: 0.04em; margin-bottom: 14px; }
+  .mcp__name { font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+    margin: 0 0 8px; text-transform: uppercase; }
+  .mcp__desc { color: var(--muted); font-size: 12.5px; line-height: 1.55; }
+  .mcp__desc code { color: var(--accent); font-size: 11.5px; }
   .mcp__chip {
-    margin-top: 14px;
-    display: inline-block; font-family: var(--mono); font-size: 10px;
-    padding: 2px 8px; border: 1px solid var(--ink-rule-2); border-radius: 4px;
+    margin-top: 12px; display: inline-block; font-size: 10px;
+    padding: 2px 8px; border: 1px solid var(--rule-2); border-radius: 4px;
     color: var(--muted);
   }
   @media (max-width: 980px) {
     .mcps { grid-template-columns: 1fr 1fr; }
-    .mcp { border-right: 1px solid var(--ink-rule); border-bottom: 1px solid var(--ink-rule); }
+    .mcp { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
     .mcp:nth-child(2n) { border-right: none; }
   }
 
   /* ============================================================ */
-  /* CONTRACT (build-your-own)                                    */
+  /* CONTRACT                                                     */
   /* ============================================================ */
-  .contract-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: start; }
+  .contract-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 56px; align-items: start; }
   .contract__pitch h3 {
-    font-family: var(--serif); font-weight: 350; font-variation-settings: "opsz" 144;
-    font-size: clamp(32px, 3.4vw, 48px); margin: 0 0 16px; letter-spacing: -0.02em; line-height: 1.05;
+    font-weight: 700; font-size: clamp(22px, 2.6vw, 30px);
+    margin: 0 0 16px; letter-spacing: -0.02em; line-height: 1.2;
+    text-transform: uppercase;
   }
-  .contract__pitch h3 em { font-style: italic; color: var(--muted); }
-  .contract__pitch p { color: var(--muted); font-weight: 300; font-size: 16px; line-height: 1.6; max-width: 46ch; }
+  .contract__pitch h3 em { color: var(--muted); font-style: normal; font-weight: 400; text-transform: none; }
+  .contract__pitch p { color: var(--muted); font-size: 13.5px; line-height: 1.7; max-width: 46ch; }
   .contract__pitch .link {
-    display: inline-flex; align-items: center; gap: 10px; margin-top: 28px;
-    font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em;
-    padding: 12px 16px; border: 1px solid var(--ink-rule-2); border-radius: 8px;
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 24px;
+    font-size: 11.5px; letter-spacing: 0.06em; font-weight: 600; text-transform: uppercase;
+    padding: 12px 16px; border: 1px solid var(--rule-2); border-radius: 8px;
     color: var(--text); transition: background 140ms ease, border-color 140ms;
   }
   .contract__pitch .link:hover { background: rgba(255,255,255,0.04); border-color: var(--accent); }
@@ -412,23 +446,22 @@
 
   .code-card {
     background: rgba(255,255,255,0.02);
-    border: 1px solid var(--ink-rule-2); border-radius: 10px;
-    padding: 0;
-    overflow: hidden;
+    border: 1px solid var(--rule-2); border-radius: 10px;
+    padding: 0; overflow: hidden;
   }
   .code-card__bar {
     display: flex; align-items: center; gap: 10px;
-    padding: 12px 16px; border-bottom: 1px solid var(--ink-rule);
-    font-family: var(--mono); font-size: 11px; color: var(--muted-2); letter-spacing: 0.06em;
+    padding: 11px 14px; border-bottom: 1px solid var(--rule);
+    font-size: 10.5px; color: var(--muted-2); letter-spacing: 0.06em;
   }
-  .code-card__bar .d { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-rule-2); }
+  .code-card__bar .d { width: 8px; height: 8px; border-radius: 50%; background: var(--rule-2); }
   .code-card__bar .d.r { background: rgba(236, 72, 153, 0.55); }
   .code-card__bar .d.y { background: rgba(251, 191, 36, 0.55); }
   .code-card__bar .d.g { background: rgba(74, 222, 128, 0.55); }
   .code-card pre {
-    margin: 0; padding: 20px 22px;
-    font-family: var(--mono); font-size: 12.5px; line-height: 1.7;
-    color: var(--text); overflow: auto; max-height: 460px;
+    margin: 0; padding: 18px 22px;
+    font-family: var(--mono); font-size: 12px; line-height: 1.75;
+    color: var(--text); overflow: auto; max-height: 480px;
   }
   .code-card pre .k { color: #f9a8d4; }
   .code-card pre .s { color: #c4b5fd; }
@@ -439,46 +472,46 @@
   /* INSTALL STEPS                                                */
   /* ============================================================ */
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
-    border-top: 1px solid var(--ink-rule); }
-  .step { padding: 36px 32px; border-right: 1px solid var(--ink-rule); position: relative; }
+    border-top: 1px solid var(--rule); }
+  .step { padding: 32px 28px; border-right: 1px solid var(--rule); position: relative; }
   .step:last-child { border-right: none; }
-  .step__no { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.14em; margin-bottom: 14px; }
-  .step__title { font-family: var(--serif); font-weight: 400; font-size: 22px; letter-spacing: -0.015em; margin: 0 0 8px; }
-  .step__body { color: var(--muted); font-weight: 300; font-size: 14.5px; line-height: 1.55; max-width: 32ch; }
-  .step__body code { font-family: var(--mono); font-size: 12px; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 3px; color: var(--accent); }
-  @media (max-width: 980px) { .steps { grid-template-columns: 1fr; } .step { border-right: none; border-bottom: 1px solid var(--ink-rule); } }
+  .step__no { font-size: 11px; color: var(--accent); letter-spacing: 0.14em; margin-bottom: 14px; font-weight: 700; }
+  .step__title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 10px; text-transform: uppercase; }
+  .step__body { color: var(--muted); font-size: 13px; line-height: 1.65; max-width: 32ch; }
+  .step__body code { font-size: 11.5px; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 3px; color: var(--accent); }
+  .step__body strong { color: var(--text); font-weight: 600; }
+  @media (max-width: 980px) { .steps { grid-template-columns: 1fr; } .step { border-right: none; border-bottom: 1px solid var(--rule); } }
 
   /* ============================================================ */
   /* FOOTER                                                       */
   /* ============================================================ */
   footer {
-    padding: 64px 0 48px;
-    font-family: var(--mono); font-size: 11px; color: var(--muted-2);
-    letter-spacing: 0.06em;
+    padding: 56px 0 40px;
+    font-size: 11.5px; color: var(--muted-2);
+    letter-spacing: 0.04em;
   }
   .footer__grid {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px;
-    padding-bottom: 32px; border-bottom: 1px solid var(--ink-rule); margin-bottom: 24px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px;
+    padding-bottom: 28px; border-bottom: 1px solid var(--rule); margin-bottom: 20px;
   }
   .footer__col h5 {
-    font-family: var(--sans); font-weight: 500; font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.14em; color: var(--text); margin: 0 0 16px;
+    font-weight: 700; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--text); margin: 0 0 14px;
   }
-  .footer__col a { display: block; color: var(--muted); padding: 4px 0; transition: color 120ms; }
+  .footer__col a { display: block; color: var(--muted); padding: 4px 0; transition: color 120ms; font-size: 12px; }
   .footer__col a:hover { color: var(--text); }
-  .footer__bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .footer__bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
   .footer__brand { display: flex; align-items: center; gap: 10px; color: var(--muted); }
   .footer__brand .mark { width: 12px; height: 12px; border-radius: 50%;
     background: linear-gradient(140deg, #6366f1, #8b5cf6, #ec4899); }
-  @media (max-width: 980px) { .footer__grid { grid-template-columns: 1fr; gap: 24px; } }
+  @media (max-width: 980px) { .footer__grid { grid-template-columns: 1fr; gap: 20px; } }
 
-  /* Reveal on load */
-  .fade-up { opacity: 0; transform: translateY(14px); animation: fadeUp 900ms cubic-bezier(.2,.7,.2,1) forwards; }
-  .fade-up.d1 { animation-delay: 100ms; }
-  .fade-up.d2 { animation-delay: 220ms; }
-  .fade-up.d3 { animation-delay: 360ms; }
-  .fade-up.d4 { animation-delay: 520ms; }
-  .fade-up.d5 { animation-delay: 700ms; }
+  /* Reveal */
+  .fade-up { opacity: 0; transform: translateY(12px); animation: fadeUp 800ms cubic-bezier(.2,.7,.2,1) forwards; }
+  .fade-up.d1 { animation-delay: 80ms; }
+  .fade-up.d2 { animation-delay: 180ms; }
+  .fade-up.d3 { animation-delay: 320ms; }
+  .fade-up.d4 { animation-delay: 480ms; }
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
   @media (prefers-reduced-motion: reduce) {
@@ -491,9 +524,9 @@
 
 <header class="top">
   <div class="container top__inner">
-    <a class="top__brand" href="/">
+    <a class="brand" href="/">
       <span class="mark" aria-hidden="true"></span>
-      <span class="name">MCP <em>Studio</em></span>
+      <span>MCP&nbsp;Studio <span class="sub">/&nbsp;<span id="latestVersionInline">v0.1.12</span></span></span>
     </a>
     <nav class="top__nav">
       <a href="#features">Features</a>
@@ -502,146 +535,160 @@
       <a href="https://github.com/RPieterse/mcp-studio-releases/releases" target="_blank" rel="noopener">Releases</a>
       <span class="pill" id="latestPill" title="Latest release">
         <span class="dot"></span>
-        <span id="latestVersionInline">v0.1.12</span>
+        <span id="latestVersionPill">v0.1.12</span>
       </span>
     </nav>
   </div>
 </header>
 
+<!-- ============================================================ -->
+<!-- HERO                                                         -->
+<!-- ============================================================ -->
 <section class="hero">
-  <div class="container hero__grid">
-    <div>
-      <p class="hero__marker fade-up">A floating MCP host · v.<span id="latestVersionMarker">0.1.12</span></p>
-      <h1 class="hero__title fade-up d1">One panel,<br />every <em>MCP</em>.</h1>
-      <p class="hero__lead fade-up d2">
-        A draggable, always-on-top widget that runs <strong>your MCP servers</strong>
-        and drives them from a single agent. Chrome, Git, Claude Code, Filesystem,
-        and anything you can wrap in a manifest.
-      </p>
+  <div class="container">
+    <p class="hero__pre fade-up">A floating MCP host · macOS · Windows · Linux</p>
+    <h1 class="hero__title fade-up d1">
+      One panel.<br /><span class="accent">Every MCP.</span>
+    </h1>
+    <p class="hero__lead fade-up d2">
+      A draggable, always-on-top widget that runs <strong>your MCP servers</strong>
+      and drives them from a single agent. Chrome, Git, Claude Code, Filesystem —
+      and anything you can wrap in a manifest.
+    </p>
 
-      <div class="dl fade-up d3">
-        <div class="dl__row">
-          <button class="dl__cta" id="primaryCta" type="button">
-            <span class="lbl">
-              <span class="top-line" id="ctaTopLine">Download for macOS</span>
-              <span class="main" id="ctaMain">MCP Studio · Apple Silicon</span>
-            </span>
-            <span class="arr">↓</span>
-          </button>
-        </div>
-        <div class="dl__meta">
-          <span><strong id="ctaVersion">v0.1.12</strong></span>
-          <span id="ctaSize">— MB</span>
-          <span>signed updates</span>
-          <span>Tauri 2 · Rust + React</span>
-        </div>
-        <div class="dl__alt" id="altDownloads">
-          <span>Other downloads:</span>
-          <a href="#" data-os="darwin-aarch64">macOS · Apple Silicon</a><span class="sep">/</span>
-          <a href="#" data-os="darwin-x86_64">macOS · Intel</a><span class="sep">/</span>
-          <a href="#" data-os="windows-x86_64">Windows · x64</a><span class="sep">/</span>
-          <a href="#" data-os="linux-x86_64">Linux · AppImage</a>
-        </div>
+    <div class="dl fade-up d3">
+      <button class="dl__cta" id="primaryCta" type="button">
+        <span class="lbl">
+          <span class="top-line" id="ctaTopLine">Download for macOS</span>
+          <span class="main" id="ctaMain">MCP Studio · Apple Silicon</span>
+        </span>
+        <span class="arr">↓</span>
+      </button>
+      <div class="dl__meta">
+        <span><strong id="ctaVersion">v0.1.12</strong></span>
+        <span id="ctaSize">— MB</span>
+        <span>signed updates</span>
+        <span>Tauri 2 · Rust + React</span>
       </div>
-    </div>
-
-    <div class="stage fade-up d4" aria-hidden="true">
-      <div class="stage__rule r1"></div>
-      <div class="stage__rule r2"></div>
-      <div class="stage__rule r3"></div>
-      <div class="stage__ticks">
-        <span class="t-n">N · 000°</span>
-        <span class="t-e">E · 090°</span>
-        <span class="t-s">S · 180°</span>
-        <span class="t-w">W · 270°</span>
-      </div>
-      <div class="stage__fab"></div>
-      <div class="stage__anno a1">
-        <span class="ll">Drag handle</span>
-        <span class="v">60×60 FAB</span>
-      </div>
-      <div class="stage__anno a2">
-        <span class="ll">Always-on-top</span>
-        <span class="v">Tauri 2 shell</span>
-      </div>
-      <div class="stage__anno a3">
-        <span class="ll">Panel anchors</span>
-        <span class="v">below this fab</span>
+      <div class="dl__alt" id="altDownloads">
+        <span>Other:</span>
+        <a href="#" data-os="darwin-aarch64">macOS&nbsp;ARM</a><span class="sep">/</span>
+        <a href="#" data-os="darwin-x86_64">macOS&nbsp;Intel</a><span class="sep">/</span>
+        <a href="#" data-os="windows-x86_64">Windows&nbsp;x64</a><span class="sep">/</span>
+        <a href="#" data-os="linux-x86_64">Linux&nbsp;AppImage</a>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================ -->
-<!-- FEATURE SPECIMENS                                            -->
+<!-- PRODUCT SHOT                                                 -->
+<!-- ============================================================ -->
+<section class="product">
+  <div class="container">
+    <p class="product__caption fade-up"><span>↓</span>&nbsp;&nbsp;THE WIDGET&nbsp;&nbsp;<span>↓</span></p>
+    <h2 class="product__title fade-up d1">A small floating button. <em>Click it. The panel opens.</em></h2>
+
+    <div class="scene fade-up d2">
+      <div class="scene__fab-wrap">
+        <div class="scene__fab" aria-hidden="true"></div>
+        <p class="scene__fab-label">
+          THE&nbsp;FAB
+          <span class="v">60&nbsp;×&nbsp;60&nbsp;px · always on top</span>
+        </p>
+      </div>
+
+      <div class="scene__arrow" aria-hidden="true"></div>
+
+      <aside class="panel-mock" aria-label="Example panel">
+        <div class="panel-mock__title">
+          <span class="d r"></span><span class="d y"></span><span class="d g"></span>
+          <span class="t">MCP&nbsp;STUDIO · PANEL</span>
+        </div>
+        <div class="panel-mock__body">
+          <div class="panel-mock__line is-cmd"><span class="you">you</span><span class="out">/install https://github.com/you/weather-mcp</span></div>
+          <div class="panel-mock__line"><span class="you">studio</span><span class="out">cloned · validated · 1 tool registered · <b>weather</b></span></div>
+          <div class="panel-mock__sep"></div>
+          <div class="panel-mock__line is-cmd"><span class="you">you</span><span class="out">what's the weather in Stockholm and commit a note about it</span></div>
+          <div class="panel-mock__line"><span class="you">agent</span><span class="out"><b>weather.current</b> → 7°C, light snow</span></div>
+          <div class="panel-mock__line"><span class="you">agent</span><span class="out"><b>fs.write_file</b> → <code style="color:var(--accent);font-size:11.5px;">~/notes/stockholm.md</code></span></div>
+          <div class="panel-mock__line"><span class="you">agent</span><span class="out"><b>git.commit</b> → "add Stockholm weather note"</span></div>
+        </div>
+        <div class="panel-mock__input">type a prompt or /command</div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- FEATURES                                                     -->
 <!-- ============================================================ -->
 <section class="section" id="features">
   <div class="container">
     <div class="section__head">
-      <p class="section__marker"><b>§01 — Features</b>What's in the panel</p>
-      <h2 class="section__title">Six primitives, <em>endlessly composable.</em></h2>
+      <p class="section__marker"><b>§01 — FEATURES</b>What's in the panel</p>
+      <h2 class="section__title">Six&nbsp;primitives, <em>endlessly composable.</em></h2>
     </div>
   </div>
   <div class="container">
     <div class="specimens">
-      <article class="specimen span-2">
-        <p class="specimen__no">01 / Slash <span class="bar"></span></p>
+      <article class="specimen">
+        <p class="specimen__no">01 / SLASH<span class="bar"></span></p>
         <h3 class="specimen__name">Slash <em>commands</em></h3>
         <p class="specimen__body">
           <code>/install</code>, <code>/mcp-servers</code>, <code>/schedule</code>,
-          <code>/configure</code>. Deterministic, no LLM round-trip.
+          <code>/configure</code>. Deterministic. No LLM round-trip.
           Each installed MCP can add its own.
         </p>
       </article>
 
-      <article class="specimen span-2">
-        <p class="specimen__no">02 / Agent <span class="bar"></span></p>
-        <h3 class="specimen__name">An <em>agent</em> over every tool</h3>
+      <article class="specimen">
+        <p class="specimen__no">02 / AGENT<span class="bar"></span></p>
+        <h3 class="specimen__name">Agent <em>over every tool</em></h3>
         <p class="specimen__body">
-          Type a natural-language prompt and the agent picks from
-          <strong style="color:var(--text);font-weight:500">every</strong>
+          Type a natural-language prompt; the agent picks from <strong>every</strong>
           installed MCP's tool catalog. Bring your own key (Anthropic, OpenAI,
           Gemini) or shell out to <code>claude</code>, <code>gemini</code>, <code>codex</code>.
         </p>
       </article>
 
-      <article class="specimen span-2">
-        <p class="specimen__no">03 / Voice <span class="bar"></span></p>
-        <h3 class="specimen__name">Voice, <em>one-shot or continuous</em></h3>
+      <article class="specimen">
+        <p class="specimen__no">03 / VOICE<span class="bar"></span></p>
+        <h3 class="specimen__name">Voice, <em>one-shot or live</em></h3>
         <p class="specimen__body">
           One button for a single phrase. Another for always-on dictation.
-          The mic dot pulses red while listening.
+          The mic pulses red while listening.
         </p>
       </article>
 
       <article class="specimen span-3">
-        <p class="specimen__no">04 / Schedules <span class="bar"></span></p>
-        <h3 class="specimen__name">Run prompts on a <em>timer</em></h3>
+        <p class="specimen__no">04 / SCHEDULES<span class="bar"></span></p>
+        <h3 class="specimen__name">Run prompts <em>on a timer</em></h3>
         <p class="specimen__body">
           Fire any prompt once or every N minutes. Each schedule keeps its own
           independent memory — your "summarize new emails" loop doesn't bury
-          your project chat. Slept-past misses fire once on resume, not N times.
+          your project chat. Slept-past misses fire <strong>once</strong> on resume, not N times.
         </p>
       </article>
 
       <article class="specimen span-3">
-        <p class="specimen__no">05 / Host bridge <span class="bar"></span></p>
+        <p class="specimen__no">05 / HOST BRIDGE<span class="bar"></span></p>
         <h3 class="specimen__name">Studio drives <em>itself</em></h3>
         <p class="specimen__body">
           A loopback HTTP endpoint lets any installed MCP move the FAB or
           toggle the panel. Ask the agent to <em>"hide yourself, screenshot
-          the screen, then come back"</em> — it can.
+          my screen, then come back."</em> — it can.
         </p>
       </article>
 
-      <article class="specimen span-6" style="border-right: none;">
-        <p class="specimen__no">06 / Memory <span class="bar"></span></p>
+      <article class="specimen span-6">
+        <p class="specimen__no">06 / MEMORY<span class="bar"></span></p>
         <h3 class="specimen__name">Threaded memory, <em>scoped per context</em></h3>
         <p class="specimen__body" style="max-width: 64ch;">
           Every agent call threads the last 30 messages — truncated at a clean
-          user-prompt boundary so tool exchanges aren't split. Projects, schedule
-          contexts, and ephemeral chats each keep their own log. <code>/clear</code>
-          wipes the current one. Rich markdown, tables, fenced code, and sanitized
+          user-prompt boundary so tool exchanges aren't split. Projects, schedules,
+          and ephemeral chats each keep their own log. <code>/clear</code>
+          wipes the current one. Markdown, tables, fenced code, and sanitized
           inline HTML render in the transcript by default.
         </p>
       </article>
@@ -650,12 +697,12 @@
 </section>
 
 <!-- ============================================================ -->
-<!-- BUNDLED MCPS                                                 -->
+<!-- BUNDLED                                                      -->
 <!-- ============================================================ -->
 <section class="section">
   <div class="container">
     <div class="section__head">
-      <p class="section__marker"><b>§02 — Bundled</b>Ships with five</p>
+      <p class="section__marker"><b>§02 — BUNDLED</b>Ships with five</p>
       <h2 class="section__title">A starter <em>tool-belt.</em></h2>
     </div>
   </div>
@@ -670,19 +717,19 @@
       <article class="mcp">
         <p class="mcp__id">dev.mcpwidget.git</p>
         <h3 class="mcp__name">Git</h3>
-        <p class="mcp__desc">Status, diff, commit, branch, push, PR — wraps your local <code style="color:var(--accent);font-family:var(--mono);font-size:12px;">git</code> and <code style="color:var(--accent);font-family:var(--mono);font-size:12px;">gh</code>.</p>
+        <p class="mcp__desc">Status, diff, commit, branch, push, PR — wraps your local <code>git</code> + <code>gh</code>.</p>
         <span class="mcp__chip">/status · /commit</span>
       </article>
       <article class="mcp">
         <p class="mcp__id">dev.mcpwidget.claude_code</p>
         <h3 class="mcp__name">Claude Code</h3>
-        <p class="mcp__desc">Hand a prompt to the local <code style="color:var(--accent);font-family:var(--mono);font-size:12px;">claude</code> CLI in a specific project dir.</p>
+        <p class="mcp__desc">Hand a prompt to the local <code>claude</code> CLI in a chosen project dir.</p>
         <span class="mcp__chip">/claude</span>
       </article>
       <article class="mcp">
         <p class="mcp__id">dev.mcpwidget.fs</p>
         <h3 class="mcp__name">Filesystem</h3>
-        <p class="mcp__desc">Read, write, list, stat, search files. Refuses to delete <code style="color:var(--accent);font-family:var(--mono);font-size:12px;">/</code> or <code style="color:var(--accent);font-family:var(--mono);font-size:12px;">$HOME</code>.</p>
+        <p class="mcp__desc">Read, write, list, stat, search. Refuses to delete <code>/</code> or <code>$HOME</code>.</p>
         <span class="mcp__chip">/ls · /cat · /find</span>
       </article>
       <article class="mcp">
@@ -701,20 +748,20 @@
 <section class="section" id="build">
   <div class="container">
     <div class="section__head">
-      <p class="section__marker"><b>§03 — Manifest</b>Build your own</p>
-      <h2 class="section__title">One JSON file, <em>installs anywhere.</em></h2>
+      <p class="section__marker"><b>§03 — MANIFEST</b>Build your own</p>
+      <h2 class="section__title">One JSON file. <em>Installs anywhere.</em></h2>
     </div>
 
     <div class="contract-grid">
       <div class="contract__pitch">
-        <h3>Drop in a <em>widget.manifest.json,</em> push the repo, share the URL.</h3>
+        <h3>Drop in <em>widget.manifest.json,</em> push the repo, share the URL.</h3>
         <p>
           Declare your install hooks, auth flow, permissions, storage, and
           quick commands in one file. Studio clones the repo, validates,
           installs, and renders a typed settings UI from the schema — no
           custom plugin code.
         </p>
-        <p style="margin-top: 18px;">
+        <p style="margin-top: 16px;">
           The full contract, a complete Notes-MCP walkthrough, and every
           interpolation rule live in the docs.
         </p>
@@ -770,8 +817,8 @@
 <section class="section" style="border-bottom: none;" id="install">
   <div class="container">
     <div class="section__head">
-      <p class="section__marker"><b>§04 — Install</b>macOS, three steps</p>
-      <h2 class="section__title">From download to <em>first prompt.</em></h2>
+      <p class="section__marker"><b>§04 — INSTALL</b>macOS, three steps</p>
+      <h2 class="section__title">From download <em>to first prompt.</em></h2>
     </div>
   </div>
   <div class="container">
@@ -779,17 +826,17 @@
       <div class="step">
         <p class="step__no">01</p>
         <h3 class="step__title">Drag to Applications</h3>
-        <p class="step__body">Open the <code>.dmg</code>. Drag <strong style="color:var(--text);font-weight:400">MCP Studio</strong> into your Applications folder.</p>
+        <p class="step__body">Open the <code>.dmg</code>. Drag <strong>MCP Studio</strong> into your Applications folder.</p>
       </div>
       <div class="step">
         <p class="step__no">02</p>
         <h3 class="step__title">Right-click → Open</h3>
-        <p class="step__body">First launch only. The build isn't notarized yet, so Gatekeeper needs the right-click handshake. macOS will warn — click <strong style="color:var(--text);font-weight:400">Open</strong>.</p>
+        <p class="step__body">First launch only. The build isn't notarized yet, so Gatekeeper needs the right-click handshake. macOS will warn — click <strong>Open</strong>.</p>
       </div>
       <div class="step">
         <p class="step__no">03</p>
         <h3 class="step__title">Click the FAB</h3>
-        <p class="step__body">Drag it anywhere. Click to open the panel. Try <code>/help</code> — and then your first prompt. Updates land silently on the next launch.</p>
+        <p class="step__body">Drag it anywhere. Click to open the panel. Try <code>/help</code> — and then your first prompt. Updates land silently on next launch.</p>
       </div>
     </div>
   </div>
@@ -832,9 +879,6 @@
 </footer>
 
 <script>
-  // ---------------------------------------------------------------
-  // OS detection + live release fetch
-  // ---------------------------------------------------------------
   const RELEASES_API = "https://api.github.com/repos/RPieterse/mcp-studio-releases/releases/latest";
   const RELEASE_URL  = "https://github.com/RPieterse/mcp-studio-releases/releases/latest";
 
@@ -844,24 +888,17 @@
     const isMac = /Mac|iPhone|iPad/i.test(ua) || platform.includes("mac");
     const isWin = /Windows/i.test(ua) || platform.includes("win");
     const isLinux = /Linux/i.test(ua) && !/Android/i.test(ua);
-
-    if (isMac) {
-      // No reliable way to tell Apple Silicon from Intel in browser, but most
-      // modern Macs are Apple Silicon. Offer the universal/aarch64 build first.
-      return { id: "darwin-aarch64", label: "macOS · Apple Silicon", short: "Download for macOS" };
-    }
+    if (isMac)   return { id: "darwin-aarch64", label: "Apple Silicon", short: "Download for macOS" };
     if (isWin)   return { id: "windows-x86_64", label: "Windows · x64", short: "Download for Windows" };
     if (isLinux) return { id: "linux-x86_64",   label: "Linux · AppImage", short: "Download for Linux" };
-    return { id: "darwin-aarch64", label: "macOS · Apple Silicon", short: "Download for macOS" };
+    return { id: "darwin-aarch64", label: "Apple Silicon", short: "Download for macOS" };
   }
 
   function fmtSize(bytes) {
     if (!bytes) return "";
-    const mb = bytes / (1024 * 1024);
-    return mb.toFixed(1) + " MB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
   }
 
-  // Match a GitHub asset filename to a platform key (mirrors detectPlatformKey in publish.mjs)
   function classifyAsset(name) {
     const n = name.toLowerCase();
     if (n.endsWith(".sig") || n.endsWith(".json")) return null;
@@ -870,7 +907,7 @@
       if (n.includes("x64") || n.includes("x86_64") || n.includes("intel")) return "darwin-x86_64";
       return "darwin-aarch64";
     }
-    if (n.endsWith(".app.tar.gz")) return null; // updater bundle, not for humans
+    if (n.endsWith(".app.tar.gz")) return null;
     if (n.endsWith(".msi") || n.endsWith(".exe")) return "windows-x86_64";
     if (n.endsWith(".appimage") || n.endsWith(".deb") || n.endsWith(".rpm")) return "linux-x86_64";
     return null;
@@ -878,13 +915,11 @@
 
   const os = detectOS();
   document.getElementById("ctaTopLine").textContent = os.short;
-  document.getElementById("ctaMain").textContent = "MCP Studio · " + os.label.replace(/^[a-z]+ · /i, "");
+  document.getElementById("ctaMain").textContent = "MCP Studio · " + os.label;
 
-  // Default click goes to the releases page; replaced once the API responds.
   const cta = document.getElementById("primaryCta");
   cta.addEventListener("click", () => {
-    const target = cta.dataset.href || RELEASE_URL;
-    window.location.href = target;
+    window.location.href = cta.dataset.href || RELEASE_URL;
   });
 
   async function loadLatest() {
@@ -894,28 +929,21 @@
       const data = await res.json();
       const version = data.tag_name || "";
 
-      // Update version chips
-      for (const id of ["latestVersionInline", "latestVersionMarker", "ctaVersion", "footerVersion"]) {
+      for (const id of ["latestVersionInline", "latestVersionPill", "ctaVersion", "footerVersion"]) {
         const el = document.getElementById(id);
-        if (!el) continue;
-        el.textContent = id === "latestVersionMarker" ? version.replace(/^v/, "") : version;
+        if (el) el.textContent = version;
       }
 
       const assets = (data.assets || []).map(a => ({
-        name: a.name,
-        url: a.browser_download_url,
-        size: a.size,
-        os: classifyAsset(a.name),
+        name: a.name, url: a.browser_download_url, size: a.size, os: classifyAsset(a.name),
       }));
 
-      // Wire primary CTA
       const primary = assets.find(a => a.os === os.id);
       if (primary) {
         cta.dataset.href = primary.url;
         document.getElementById("ctaSize").textContent = "· " + fmtSize(primary.size);
       }
 
-      // Wire alt downloads
       const altMap = new Map();
       for (const a of assets) if (a.os) altMap.set(a.os, a);
       document.querySelectorAll("#altDownloads a[data-os]").forEach(link => {
@@ -925,7 +953,6 @@
       });
     } catch (err) {
       console.warn("Could not fetch latest release:", err);
-      // Fall back: CTA goes to releases page
       cta.dataset.href = RELEASE_URL;
     }
   }
