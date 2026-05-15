@@ -163,6 +163,7 @@
     <a href="#agent">AI agent</a>
     <a href="#voice">Voice</a>
     <a href="#schedules">Schedules</a>
+    <a href="#builder">MCP Builder</a>
     <a href="#installing">Installing MCPs</a>
 
     <h2>Built-in MCPs</h2>
@@ -200,6 +201,7 @@
       <tr><td><code>/mcp-servers</code></td><td>List installed MCPs (use <code>-name &lt;id&gt;</code> to drill into one)</td></tr>
       <tr><td><code>/install &lt;git-url-or-path&gt;</code></td><td>Install a new MCP from git or a local directory</td></tr>
       <tr><td><code>/configure [mcp-id]</code></td><td>Open settings, optionally focused on an MCP</td></tr>
+      <tr><td><code>/build-mcp [new|load|switch|remove]</code></td><td>Open the MCP Builder — scaffold, load, or manage local MCPs you're authoring</td></tr>
       <tr><td><code>/tab [list|new|switch|close|rename]</code></td><td>Multi-session tabs — each tab has its own transcript, agent memory, and project pointer</td></tr>
       <tr><td><code>/transparency &lt;0–100&gt;</code></td><td>Panel opacity (also <code>+N</code> / <code>-N</code> deltas)</td></tr>
       <tr><td><code>/clear</code></td><td>Clear the transcript</td></tr>
@@ -270,6 +272,19 @@
     </ul>
     <p>Open the schedule's <strong>runs</strong> button in Settings to read past fires. This keeps your project transcripts clean — a "every 5 min, check if X" schedule won't bury your real conversation.</p>
     <p><em>The agent remembers across fires.</em> Each schedule's own prior runs are threaded into the next call as <code>priorMessages</code>, so a recurring "summarize new emails" schedule sees what it reported last time. Same goes for projects (memory persists per project) and ephemeral chats (memory lives for the panel session). Memory is capped at 30 messages and truncated at a clean user-prompt boundary so tool exchanges aren't split.</p>
+
+    <h2 id="builder">MCP Builder</h2>
+    <p><code>/build-mcp</code> opens a dedicated workspace inside Studio for scaffolding, editing, and (eventually) publishing your own MCPs from a prompt. The Builder keeps a <strong>library</strong> of every MCP you've ever scaffolded or loaded — health-checked on every render, so you always know which entries still resolve on disk.</p>
+    <table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>/build-mcp</code></td><td>Open the Builder on your active build (or the empty state)</td></tr>
+      <tr><td><code>/build-mcp new [prompt]</code></td><td>Scaffold a new build from a natural-language prompt</td></tr>
+      <tr><td><code>/build-mcp load &lt;path&gt;</code></td><td>Register an existing local folder (must contain <code>widget.manifest.json</code>) as a build</td></tr>
+      <tr><td><code>/build-mcp switch &lt;id&gt;</code></td><td>Switch the Builder to another build in your library</td></tr>
+      <tr><td><code>/build-mcp remove &lt;id&gt;</code></td><td>Drop a build from your library (loaded folders are never deleted from disk)</td></tr>
+    </table>
+    <p><strong>Where things live.</strong> Scaffolded builds materialize under <code>~/.mcp-widget/built/&lt;id&gt;/</code>; loaded builds stay wherever you keep them. The library itself is at <code>~/.mcp-widget/builder.json</code>. Once a build's manifest validates, the existing local-install path takes over — a built MCP behaves like any third-party MCP from that point on.</p>
+    <p><strong>This is a phased feature.</strong> Today: the view, the library with stale-path detection, scaffold creation, load-an-existing-folder, read-only file browsing. Coming up: AI-driven scaffolding from your prompt, an editable in-panel editor with conflict resolution, a debug-log tail, and one-click publish to GitHub. See <code>docs/MCP_BUILDER.md</code> for the full roadmap.</p>
 
     <h2 id="installing">Installing MCPs</h2>
     <pre><code>/install https://github.com/your-org/your-mcp
