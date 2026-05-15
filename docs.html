@@ -419,6 +419,7 @@
   }
 ]</code></pre>
     <p>Supported <code>type</code> values: <code>text</code>, <code>number</code>, <code>boolean</code>, <code>enum</code> (with <code>options</code>), and <code>map</code> (a string→string dictionary, e.g. friendly_name → absolute_path). Add <code>"secret": true</code> on a text field to mask the input — useful for tokens you want kept in the per-MCP file rather than the OS keychain. <code>map</code> entries are not secret-eligible.</p>
+    <p>Add <code>"hidden": true</code> to keep a field out of the settings UI while still allowing interpolation. Useful for mirrored or derived values (e.g. Git's <code>active_workspace_path</code> is auto-set from <code>workspaces[active_workspace_name]</code> by the <code>/workspace</code> switcher — other MCPs read it cross-MCP, but you shouldn't edit it directly).</p>
     <p>Each MCP owns its own storage. To <em>read</em> another MCP's value (so you can avoid duplicating concepts like a workspace path) use a dotted reference:</p>
     <pre><code>"args": { "cwd": "${storage.dev.mcpwidget.git.active_workspace_path}" }</code></pre>
     <p>The host resolves the longest matching prefix as the MCP id and the final segment as the key. The bundled <code>ClaudeCode</code> and <code>Filesystem</code> MCPs use this to inherit Git's workspace without storing their own copy.</p>
@@ -433,10 +434,16 @@
     <p>Behavior: <code>/workspace</code> prints the current value; <code>/workspace /path/to/repo</code> writes it.</p>
 
     <h3>Switcher shortcuts (<code>select_from</code>)</h3>
-    <p>Pair a primitive key with a <code>map</code> storage key and the quick command becomes a named-entry switcher:</p>
+    <p>Pair a primitive key with a <code>map</code> storage key and the quick command becomes a named-entry switcher. Optional <code>name_key</code> mirrors the selected entry's NAME into a second storage key so both halves of the selection are explicitly stored:</p>
     <pre><code>"storage": [
   { "key": "workspaces", "type": "map", "label": "Workspaces" },
-  { "key": "active_workspace_path", "type": "text", "label": "Active path" }
+  { "key": "active_workspace_name", "type": "text", "label": "Active name" },
+  {
+    "key": "active_workspace_path",
+    "type": "text",
+    "label": "Active path",
+    "hidden": true   // derived; readable cross-MCP but not editable in settings
+  }
 ],
 "quick_commands": [
   {
@@ -444,6 +451,7 @@
     "description": "List, switch, add, or remove saved workspaces",
     "storage_action": {
       "key": "active_workspace_path",
+      "name_key": "active_workspace_name",
       "select_from": "workspaces"
     }
   }
@@ -451,10 +459,11 @@
     <p>The Git MCP ships with exactly this shape. Behavior of <code>/workspace</code>:</p>
     <ul>
       <li><code>/workspace</code> — list saved entries with the active one marked.</li>
-      <li><code>/workspace &lt;name&gt;</code> — switch active to that entry (mirrors its path into <code>key</code> so cross-MCP <code>${storage.dev.mcpwidget.git.active_workspace_path}</code> keeps working).</li>
+      <li><code>/workspace &lt;name&gt;</code> — switch active to that entry. Writes <code>active_workspace_name = "&lt;name&gt;"</code> AND <code>active_workspace_path = "&lt;path&gt;"</code>; cross-MCP reads pick up either via <code>${storage.dev.mcpwidget.git.active_workspace_path}</code> / <code>${storage.dev.mcpwidget.git.active_workspace_name}</code>.</li>
       <li><code>/workspace &lt;name&gt; &lt;path&gt;</code> — add or overwrite an entry and switch to it.</li>
-      <li><code>/workspace rm &lt;name&gt;</code> (or <code>/workspace -&lt;name&gt;</code>) — remove an entry.</li>
+      <li><code>/workspace rm &lt;name&gt;</code> (or <code>/workspace -&lt;name&gt;</code>) — remove an entry; if it was the active one, both the name and path mirrors are cleared.</li>
     </ul>
+    <p>Omit <code>name_key</code> for a single-write switcher (only <code>key</code> is mirrored) — backwards compatible with manifests that don't need the name stored separately.</p>
 
     <h2 id="tutorial">Full tutorial: Notes MCP</h2>
     <p>Walk through building a working MCP from zero — wraps a fictional <code>notes.example.com</code> REST API, ships an api_key auth flow, exposes 5 tools and 3 quick commands with context forms, installs into Studio in under 10 minutes.</p>
