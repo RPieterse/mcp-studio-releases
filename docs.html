@@ -279,14 +279,14 @@
     <p>Drives the local <code>claude</code> CLI. Hands a prompt to Claude Code in a specific project directory — Claude does its own file reads, edits, and tool use internally.</p>
     <table>
       <tr><th>Tool</th><th>Args</th></tr>
-      <tr><td><code>run</code></td><td><code>prompt</code>, <code>cwd</code> (auto-filled from this MCP's <code>active_workspace_path</code> storage)</td></tr>
+      <tr><td><code>run</code></td><td><code>prompt</code>, <code>cwd</code> (auto-filled from <strong>Git's</strong> <code>active_workspace_path</code> via cross-MCP read)</td></tr>
     </table>
     <p>Quick commands: <code>/claude &lt;prompt&gt;</code></p>
-    <p>Set the workspace under <strong>Settings → MCP Servers → ClaudeCode → Storage</strong>.</p>
+    <p>ClaudeCode has <strong>no storage of its own</strong> — it inherits the workspace from Git. Change the active project with <code>/workspace &lt;name&gt;</code> or via <strong>Settings → MCP Servers → Git → Storage</strong>.</p>
 
     <h2 id="git">Git <span class="pill">dev.mcpwidget.git</span></h2>
-    <p>Wraps the local <code>git</code> and <code>gh</code> CLIs. Uses your existing git auth + <code>gh auth login</code>.</p>
-    <p>Every tool takes a <code>cwd</code> — quick commands auto-fill it from this MCP's <code>active_workspace_path</code> storage. Set it under <strong>Settings → MCP Servers → Git → Storage</strong>.</p>
+    <p>Wraps the local <code>git</code> and <code>gh</code> CLIs. Uses your existing git auth + <code>gh auth login</code>. <strong>Owns the workspace concept</strong> for the whole app — ClaudeCode and Filesystem read it from here.</p>
+    <p>Every tool takes a <code>cwd</code> — quick commands auto-fill it from this MCP's <code>active_workspace_path</code> storage. Manage the <code>workspaces</code> map (name → absolute path) under <strong>Settings → MCP Servers → Git → Storage</strong>, or use the <code>/workspace</code> switcher (see below).</p>
     <table>
       <tr><th>Tool</th><th>Args</th></tr>
       <tr><td><code>status</code></td><td><code>cwd</code></td></tr>
@@ -298,7 +298,14 @@
       <tr><td><code>pr_create</code></td><td><code>cwd</code>, <code>title</code>, <code>body</code></td></tr>
       <tr><td><code>pr_comment</code></td><td><code>cwd</code>, <code>number</code>, <code>body</code></td></tr>
     </table>
-    <p>Quick commands: <code>/status</code>, <code>/diff</code>, <code>/branches</code>, <code>/commit</code>, <code>/pr</code></p>
+    <p>Quick commands:</p>
+    <ul>
+      <li><code>/workspace</code> — list saved workspaces (active one marked)</li>
+      <li><code>/workspace &lt;name&gt;</code> — switch active workspace</li>
+      <li><code>/workspace &lt;name&gt; &lt;path&gt;</code> — add/update an entry</li>
+      <li><code>/workspace rm &lt;name&gt;</code> — remove an entry</li>
+      <li><code>/status</code>, <code>/diff</code>, <code>/branches</code>, <code>/commit</code>, <code>/pr</code> — operate in the active workspace</li>
+    </ul>
 
     <h2 id="filesystem">Filesystem <span class="pill">dev.mcpwidget.fs</span></h2>
     <p>Read, write, list, search, and stat files on the local filesystem. Refuses to delete <code>/</code> or <code>$HOME</code>.</p>
