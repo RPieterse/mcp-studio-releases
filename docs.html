@@ -335,11 +335,12 @@
 
     <h2 id="mobile">Mobile remote-control</h2>
     <p>Drive Studio from your phone over your tunnel (Tailscale, Cloudflare Tunnel, ngrok, ZeroTier — whichever you already use). The phone is a thin client: every MCP, every agent call still runs on the desktop. Studio operates no cloud infrastructure.</p>
+    <p>→ <strong>Mobile download + dedicated docs:</strong> <a href="https://rpieterse.github.io/mcp-studio-mobile-releases/">rpieterse.github.io/mcp-studio-mobile-releases</a></p>
     <h3>One-time setup</h3>
     <ol>
       <li>Open <strong>Settings → Mobile</strong> in the desktop app, paste your tunnel URL (e.g. <code>https://studio.tail-xxx.ts.net</code>) and click <strong>Enable</strong>.</li>
       <li>Click <strong>Generate pair code</strong>. You get a <code>mcpstudio://pair?t=…</code> URI valid for 5 minutes.</li>
-      <li>Install the MCP Studio mobile app from <a href="https://github.com/RPieterse/mcp-studio-mobile-releases">mcp-studio-mobile-releases</a>.</li>
+      <li>Install the MCP Studio mobile app — APK + iOS TestFlight links on the <a href="https://rpieterse.github.io/mcp-studio-mobile-releases/">mobile download page</a>.</li>
       <li>In the mobile app: <strong>Scan QR</strong> (or paste the link), name the device, done.</li>
     </ol>
     <p>The device token lives in your phone's Secure Enclave / Keystore via Expo SecureStore. Only its SHA-256 lives on the desktop in <code>~/.mcp-widget/mobile-pairings.json</code>. Revoke any device from <strong>Settings → Mobile → Paired devices → Revoke</strong>; the revoked phone's WebSocket gets force-closed with code <code>4401</code>.</p>
