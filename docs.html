@@ -277,7 +277,7 @@
       <tr><td><code>/configure [mcp-id]</code></td><td>Open settings, optionally focused on an MCP</td></tr>
       <tr><td><code>/project [new|switch|delete|end]</code></td><td>Persistent conversation contexts — see <a href="#projects">Projects</a></td></tr>
       <tr><td><code>/build-mcp [new|load|switch|remove]</code></td><td>Open the MCP Builder — scaffold, load, or manage local MCPs you're authoring</td></tr>
-      <tr><td><code>/tab [list|new|switch|close|rename]</code></td><td>Multi-session tabs — each tab has its own transcript, agent memory, and project pointer</td></tr>
+      <tr><td><code>/tab [list|new|switch|close|rename|pop]</code></td><td>Multi-session tabs — each tab has its own transcript, agent memory, and project pointer. <code>/tab pop</code> promotes the active tab into its own OS window.</td></tr>
       <tr><td><code>/transparency &lt;0–100&gt;</code></td><td>Panel opacity (also <code>+N</code> / <code>-N</code> deltas)</td></tr>
       <tr><td><code>/clear</code></td><td>Clear the transcript</td></tr>
       <tr><td><code>/hide</code></td><td>Close the panel</td></tr>
@@ -286,6 +286,7 @@
     <h2 id="tabs">Tabs</h2>
     <p>Each tab is an independent agent session — its own transcript, its own conversation memory (<code>priorMessages</code>), its own active project, and its own per-project MCP storage. App-level settings (provider, model, installed MCPs, keychain, transparency) are shared.</p>
     <p>Open a new tab with <code>/tab new [name]</code> or <kbd>Cmd</kbd>-<kbd>T</kbd>. Close with <code>/tab close</code> or <kbd>Cmd</kbd>-<kbd>W</kbd> (the last tab resets instead of closing). Switch with <code>/tab switch &lt;name-or-number&gt;</code>, <kbd>Cmd</kbd>-<kbd>1</kbd>..<kbd>9</kbd>, or <kbd>Cmd</kbd>-<kbd>Shift</kbd>-<kbd>[</kbd> / <kbd>Cmd</kbd>-<kbd>Shift</kbd>-<kbd>]</kbd> to cycle. The tab strip auto-hides when only one tab exists.</p>
+    <p><strong>Pop a tab into its own window</strong> with <code>/tab pop</code> (or <code>/tab pop &lt;name-or-number&gt;</code>). Studio opens a new OS window pinned to that tab — useful when you want a long-running agent run visible alongside other work. The popped window has standard decorations and no FAB. Closing it leaves the tab in your main panel; the tab itself never gets deleted by a pop.</p>
     <p><strong>Per-project MCP storage.</strong> When a tab is in a project (<code>/project switch foo</code>), MCP storage reads merge a per-project overlay on top of the global file. Writes from <code>storage_action</code> quick commands route to the overlay. This lets <code>/workspace</code> in tab A's project <code>foo</code> set a different Git workspace than tab B's project <code>bar</code> — Studio's <strong>Settings → MCP Servers</strong> shows both panels (global + Project overrides) when a project is active.</p>
     <p>Files: global storage at <code>~/.mcp-widget/storage/&lt;mcp_id&gt;.json</code>, project overlay at <code>~/.mcp-widget/projects/&lt;slug&gt;/mcp-storage/&lt;mcp_id&gt;.json</code>. Overlay wins per-field; missing overlay keys fall through to global.</p>
     <p><em>Caveats:</em> agent-mediated tool calls (where the LLM picks tools without quick-command interpolation) still read the global storage view — the agent doesn't know which tab's project it's in. Quick commands honor the overlay correctly.</p>
@@ -935,12 +936,12 @@ node apps/cli/dist/index.js install --path /path/to/your-mcp</code></pre>
       <li><strong>Auto-reauth on expired OAuth</strong> · detects auth-expired errors, refreshes tokens in place, respawns the MCP, retries — once. Falls through with a re-authorize hint if the refresh itself fails</li>
       <li><strong>Streaming tool-call cards</strong> · each tool the agent invokes appears as its own card in the transcript, transitioning from running → done/error as the loop progresses. Cards mirror to the mobile companion app in real time.</li>
       <li><strong>Per-project agent storage</strong> · the agent loop now spawns MCPs with the active project's storage overlay merged over its global view. Matches what quick commands have always done. Switching projects between agent runs respawns affected MCPs so the new context lands in <code>env</code>.</li>
+      <li><strong><code>/tab pop</code></strong> · promote any tab into its own OS window with standard decorations. Closing the window leaves the tab intact in your main panel.</li>
+      <li><strong>MCP startup-failure stderr</strong> · errors surfaced from a failed MCP spawn (binary missing, install hook bailed, crashes shortly after spawn) now include the tail of the MCP's stderr log inline in the transcript — debug without leaving the panel.</li>
     </ul>
     <h2 id="roadmap-planned">Planned</h2>
     <ul>
-      <li><strong>/tab pop</strong> · promote a tab into its own OS window</li>
       <li><strong>Builder publish UX polish</strong> · README templating, repo description, license picker</li>
-      <li><strong>MCP startup-failure error cards</strong> · show the stderr tail inline if the auto-restart fails</li>
     </ul>
     <p>Open an issue on <a href="https://github.com/RPieterse/mcp-studio-releases/issues" target="_blank" rel="noopener">the releases repo</a> if you want to nudge priorities.</p>
   </main>
