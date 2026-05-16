@@ -137,6 +137,25 @@
     .top__inner { padding: 14px 20px; }
     .top__nav { gap: 16px; }
   }
+
+  /* Phone-sized: tighten padding, shrink headings, stack tables so wide */
+  /* code samples don't trigger horizontal scroll on the whole page. */
+  @media (max-width: 600px) {
+    main { padding: 24px 16px; max-width: 100%; }
+    h1 { font-size: 26px; }
+    h2 { font-size: 20px; margin: 36px 0 12px; padding-top: 24px; }
+    h3 { font-size: 12px; }
+    p, li { font-size: 14.5px; }
+    pre { font-size: 12px; padding: 12px 14px; }
+    code { font-size: 0.92em; }
+    /* Tables: card-style stack so columns wrap to rows. */
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .top__inner { padding: 12px 16px; font-size: 11px; }
+    .top__nav { gap: 12px; }
+    .top__brand .name { font-size: 14px; }
+    nav.side { padding: 16px 20px; }
+    nav.side a { font-size: 13.5px; padding: 6px 0; }
+  }
 </style>
 </head>
 <body>
@@ -167,11 +186,13 @@
     <a href="#builder">MCP Builder</a>
     <a href="#installing">Installing MCPs</a>
 
-    <h2>Built-in MCPs</h2>
+    <h2>Bundled MCPs</h2>
     <a href="#chrome">Chrome</a>
-    <a href="#claude-code">Claude Code</a>
-    <a href="#git">Git</a>
     <a href="#filesystem">Filesystem</a>
+    <a href="#studio-core">Studio Core</a>
+
+    <h2>MCP library</h2>
+    <a href="#library">Studio-maintained MCPs</a>
 
     <h2>Building an MCP</h2>
     <a href="#contract">The contract</a>
@@ -335,7 +356,8 @@
     </table>
     <p>See the <code>docs/MCP_CONTRACT.md</code> in the main repo for the side-by-side trade-off between the two Google Sheets MCPs (service account vs OAuth — ownership, sharing, personal-project quirks).</p>
 
-    <h1 style="margin-top: 56px">Built-in MCPs</h1>
+    <h1 style="margin-top: 56px">Bundled MCPs</h1>
+    <p>These ship with Studio and can't be uninstalled. Everything else lives in the <a href="#mcp-library">MCP library</a> as a regular <code>/install</code> target.</p>
 
     <h2 id="chrome">Chrome <span class="pill">dev.mcpwidget.chrome</span></h2>
     <p>Open URLs, search, and read open tabs in Google Chrome (macOS, via AppleScript).</p>
@@ -347,38 +369,6 @@
       <tr><td><code>list_tabs</code></td><td>—</td></tr>
     </table>
     <p>Quick commands: <code>/open</code>, <code>/search</code>, <code>/tabs</code></p>
-
-    <h2 id="claude-code">Claude Code <span class="pill">dev.mcpwidget.claude_code</span></h2>
-    <p>Drives the local <code>claude</code> CLI. Hands a prompt to Claude Code in a specific project directory — Claude does its own file reads, edits, and tool use internally.</p>
-    <table>
-      <tr><th>Tool</th><th>Args</th></tr>
-      <tr><td><code>run</code></td><td><code>prompt</code>, <code>cwd</code> (auto-filled from <strong>Git's</strong> <code>active_workspace_path</code> via cross-MCP read)</td></tr>
-    </table>
-    <p>Quick commands: <code>/claude &lt;prompt&gt;</code></p>
-    <p>ClaudeCode has <strong>no storage of its own</strong> — it inherits the workspace from Git. Change the active project with <code>/workspace &lt;name&gt;</code> or via <strong>Settings → MCP Servers → Git → Storage</strong>.</p>
-
-    <h2 id="git">Git <span class="pill">dev.mcpwidget.git</span></h2>
-    <p>Wraps the local <code>git</code> and <code>gh</code> CLIs. Uses your existing git auth + <code>gh auth login</code>. <strong>Owns the workspace concept</strong> for the whole app — ClaudeCode and Filesystem read it from here.</p>
-    <p>Every tool takes a <code>cwd</code> — quick commands auto-fill it from this MCP's <code>active_workspace_path</code> storage. Manage the <code>workspaces</code> map (name → absolute path) under <strong>Settings → MCP Servers → Git → Storage</strong>, or use the <code>/workspace</code> switcher (see below).</p>
-    <table>
-      <tr><th>Tool</th><th>Args</th></tr>
-      <tr><td><code>status</code></td><td><code>cwd</code></td></tr>
-      <tr><td><code>diff</code></td><td><code>cwd</code>, <code>staged?</code>, <code>paths?</code></td></tr>
-      <tr><td><code>add</code></td><td><code>cwd</code>, <code>paths</code></td></tr>
-      <tr><td><code>commit</code></td><td><code>cwd</code>, <code>message</code></td></tr>
-      <tr><td><code>branch</code></td><td><code>cwd</code>, <code>action: list|create|switch</code>, <code>name?</code></td></tr>
-      <tr><td><code>push</code></td><td><code>cwd</code>, <code>remote?</code>, <code>branch?</code>, <code>set_upstream?</code>, <code>force?</code></td></tr>
-      <tr><td><code>pr_create</code></td><td><code>cwd</code>, <code>title</code>, <code>body</code></td></tr>
-      <tr><td><code>pr_comment</code></td><td><code>cwd</code>, <code>number</code>, <code>body</code></td></tr>
-    </table>
-    <p>Quick commands:</p>
-    <ul>
-      <li><code>/workspace</code> — list saved workspaces (active one marked)</li>
-      <li><code>/workspace &lt;name&gt;</code> — switch active workspace</li>
-      <li><code>/workspace &lt;name&gt; &lt;path&gt;</code> — add/update an entry</li>
-      <li><code>/workspace rm &lt;name&gt;</code> — remove an entry</li>
-      <li><code>/status</code>, <code>/diff</code>, <code>/branches</code>, <code>/commit</code>, <code>/pr</code> — operate in the active workspace</li>
-    </ul>
 
     <h2 id="filesystem">Filesystem <span class="pill">dev.mcpwidget.fs</span></h2>
     <p>Read, write, list, search, and stat files on the local filesystem. Refuses to delete <code>/</code> or <code>$HOME</code>.</p>
@@ -394,6 +384,17 @@
       <tr><td><code>search</code></td><td><code>path</code>, <code>query</code>, <code>max_results?</code></td></tr>
     </table>
     <p>Quick commands: <code>/ls</code>, <code>/cat</code>, <code>/find</code></p>
+
+    <h2 id="studio-core">Studio Core <span class="pill">dev.mcpwidget.core</span></h2>
+    <p>The self-MCP — exposes Studio's own panel and FAB as tools the agent can call. Lets you say "hide the panel" or "move the floating button to the top-right" and have it happen.</p>
+    <table>
+      <tr><th>Tool</th><th>Args</th></tr>
+      <tr><td><code>panel_show</code></td><td>—</td></tr>
+      <tr><td><code>panel_hide</code></td><td>—</td></tr>
+      <tr><td><code>panel_toggle</code></td><td>—</td></tr>
+      <tr><td><code>fab_move</code></td><td><code>x</code>, <code>y</code></td></tr>
+    </table>
+    <p>Implemented via the loopback <a href="#host-bridge">host bridge</a> — every spawned MCP gets the bridge port + bearer token via env, but Studio Core is the only one that's expected to use them out of the box.</p>
 
     <h1 style="margin-top: 56px" id="contract">Building an MCP</h1>
     <p class="lead">An MCP for Studio is just a regular Model Context Protocol server with one extra file: <code>widget.manifest.json</code> at the repo root.</p>

@@ -552,8 +552,9 @@
     </h1>
     <p class="hero__lead fade-up d2">
       A draggable, always-on-top widget that runs <strong>your MCP servers</strong>
-      and drives them from a single agent. Chrome, Git, Claude Code, Filesystem —
-      and anything you can wrap in a manifest.
+      and drives them from a single agent. Chrome, Filesystem, Studio Core out of the
+      box — paste a git URL to add Claude Code, Git, Google Sheets, or anything else
+      you can wrap in a manifest.
     </p>
 
     <div class="dl fade-up d3">
@@ -702,7 +703,7 @@
 <section class="section">
   <div class="container">
     <div class="section__head">
-      <p class="section__marker"><b>§02 — BUNDLED</b>Ships with five</p>
+      <p class="section__marker"><b>§02 — BUNDLED</b>Ships with three</p>
       <h2 class="section__title">A starter <em>tool-belt.</em></h2>
     </div>
   </div>
@@ -715,18 +716,6 @@
         <span class="mcp__chip">/open · /tabs</span>
       </article>
       <article class="mcp">
-        <p class="mcp__id">dev.mcpwidget.git</p>
-        <h3 class="mcp__name">Git</h3>
-        <p class="mcp__desc">Status, diff, commit, branch, push, PR — wraps your local <code>git</code> + <code>gh</code>.</p>
-        <span class="mcp__chip">/status · /commit</span>
-      </article>
-      <article class="mcp">
-        <p class="mcp__id">dev.mcpwidget.claude_code</p>
-        <h3 class="mcp__name">Claude Code</h3>
-        <p class="mcp__desc">Hand a prompt to the local <code>claude</code> CLI in a chosen project dir.</p>
-        <span class="mcp__chip">/claude</span>
-      </article>
-      <article class="mcp">
         <p class="mcp__id">dev.mcpwidget.fs</p>
         <h3 class="mcp__name">Filesystem</h3>
         <p class="mcp__desc">Read, write, list, stat, search. Refuses to delete <code>/</code> or <code>$HOME</code>.</p>
@@ -735,8 +724,48 @@
       <article class="mcp">
         <p class="mcp__id">dev.mcpwidget.core</p>
         <h3 class="mcp__name">Studio Core</h3>
-        <p class="mcp__desc">The self-MCP. Move the FAB, toggle the panel, take a screenshot.</p>
+        <p class="mcp__desc">The self-MCP. Move the FAB, toggle the panel, drive Studio from itself.</p>
         <span class="mcp__chip">/panel_toggle · /fab</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- MCP LIBRARY                                                  -->
+<!-- ============================================================ -->
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__marker"><b>§02b — LIBRARY</b>Pinned third-party MCPs</p>
+      <h2 class="section__title">More tools. <em>One paste.</em></h2>
+    </div>
+  </div>
+  <div class="container">
+    <div class="mcps">
+      <article class="mcp">
+        <p class="mcp__id">dev.mcpwidget.claude_code</p>
+        <h3 class="mcp__name">Claude Code</h3>
+        <p class="mcp__desc">Hand a prompt to the local <code>claude</code> CLI in a chosen project dir.</p>
+        <span class="mcp__chip">/install RPieterse/mcp-studio-claude-code-mcp</span>
+      </article>
+      <article class="mcp">
+        <p class="mcp__id">dev.mcpwidget.git</p>
+        <h3 class="mcp__name">Git</h3>
+        <p class="mcp__desc">Status, diff, commit, branch, push, PR — wraps your local <code>git</code> + <code>gh</code>.</p>
+        <span class="mcp__chip">/install RPieterse/mcp-studio-git-mcp</span>
+      </article>
+      <article class="mcp">
+        <p class="mcp__id">com.rohanpieterse.gsheets_oauth</p>
+        <h3 class="mcp__name">Google Sheets · OAuth</h3>
+        <p class="mcp__desc">Read/write Sheets as the authenticated user. Files live in your Drive.</p>
+        <span class="mcp__chip">/install RPieterse/mcp-studio-google-sheets-oauth-mcp</span>
+      </article>
+      <article class="mcp">
+        <p class="mcp__id">com.rohanpieterse.gsheets</p>
+        <h3 class="mcp__name">Google Sheets · SA</h3>
+        <p class="mcp__desc">Service-account variant for scheduled / headless jobs. Files owned by the SA.</p>
+        <span class="mcp__chip">/install RPieterse/mcp-studio-google-sheets-mcp</span>
       </article>
     </div>
   </div>
