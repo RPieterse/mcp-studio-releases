@@ -184,6 +184,7 @@
     <a href="#projects">Projects</a>
     <a href="#schedules">Schedules</a>
     <a href="#builder">MCP Builder</a>
+    <a href="#mobile">Mobile</a>
     <a href="#installing">Installing MCPs</a>
 
     <h2>Bundled MCPs</h2>
@@ -321,6 +322,31 @@
     </table>
     <p><strong>Where things live.</strong> Scaffolded builds materialize under <code>~/.mcp-widget/built/&lt;id&gt;/</code>; loaded builds stay wherever you keep them. The library itself is at <code>~/.mcp-widget/builder.json</code>. Once a build's manifest validates, the existing local-install path takes over — a built MCP behaves like any third-party MCP from that point on.</p>
     <p><strong>This is a phased feature.</strong> Today: the view, the library with stale-path detection, scaffold creation, load-an-existing-folder, read-only file browsing. Coming up: AI-driven scaffolding from your prompt, an editable in-panel editor with conflict resolution, a debug-log tail, and one-click publish to GitHub. See <code>docs/MCP_BUILDER.md</code> for the full roadmap.</p>
+
+    <h2 id="mobile">Mobile remote-control</h2>
+    <p>Drive Studio from your phone over your tunnel (Tailscale, Cloudflare Tunnel, ngrok, ZeroTier — whichever you already use). The phone is a thin client: every MCP, every agent call still runs on the desktop. Studio operates no cloud infrastructure.</p>
+    <h3>One-time setup</h3>
+    <ol>
+      <li>Open <strong>Settings → Mobile</strong> in the desktop app, paste your tunnel URL (e.g. <code>https://studio.tail-xxx.ts.net</code>) and click <strong>Enable</strong>.</li>
+      <li>Click <strong>Generate pair code</strong>. You get a <code>mcpstudio://pair?t=…</code> URI valid for 5 minutes.</li>
+      <li>Install the MCP Studio mobile app from <a href="https://github.com/RPieterse/mcp-studio-mobile-releases">mcp-studio-mobile-releases</a>.</li>
+      <li>In the mobile app: <strong>Scan QR</strong> (or paste the link), name the device, done.</li>
+    </ol>
+    <p>The device token lives in your phone's Secure Enclave / Keystore via Expo SecureStore. Only its SHA-256 lives on the desktop in <code>~/.mcp-widget/mobile-pairings.json</code>. Revoke any device from <strong>Settings → Mobile → Paired devices → Revoke</strong>; the revoked phone's WebSocket gets force-closed with code <code>4401</code>.</p>
+    <h3>What's in v1</h3>
+    <ul>
+      <li>Live transcript streaming for the active tab</li>
+      <li>Submit prompts (text or slash commands) from the phone</li>
+      <li>Switch / create / close / rename tabs; switch / create / end projects</li>
+      <li>Auto-reconnect with 1s → 30s exponential backoff; 20s heartbeat</li>
+    </ul>
+    <h3>Deferred to v2</h3>
+    <ul>
+      <li>Push notifications on agent completion (pairing record reserves a <code>push_token</code> slot)</li>
+      <li>Voice input on the phone</li>
+      <li>Editing settings / installing MCPs / driving the Builder from the phone</li>
+      <li>File attachments / image prompts</li>
+    </ul>
 
     <h2 id="installing">Installing MCPs</h2>
     <pre><code>/install https://github.com/your-org/your-mcp
