@@ -933,11 +933,11 @@ node apps/cli/dist/index.js install --path /path/to/your-mcp</code></pre>
       <li><strong>Gallery</strong> · <code>/gallery</code> fetches a curated registry and surfaces ready-to-paste <code>/install</code> lines for vetted third-party MCPs; <strong>Settings → Gallery</strong> adds search and one-click install</li>
       <li><strong><code>store_result</code> manifest field</strong> · quick commands write tool outputs back to storage (with optional JSON path) for chained <code>${storage}</code> reads</li>
       <li><strong>Auto-reauth on expired OAuth</strong> · detects auth-expired errors, refreshes tokens in place, respawns the MCP, retries — once. Falls through with a re-authorize hint if the refresh itself fails</li>
+      <li><strong>Streaming tool-call cards</strong> · each tool the agent invokes appears as its own card in the transcript, transitioning from running → done/error as the loop progresses. Cards mirror to the mobile companion app in real time.</li>
+      <li><strong>Per-project agent storage</strong> · the agent loop now spawns MCPs with the active project's storage overlay merged over its global view. Matches what quick commands have always done. Switching projects between agent runs respawns affected MCPs so the new context lands in <code>env</code>.</li>
     </ul>
     <h2 id="roadmap-planned">Planned</h2>
     <ul>
-      <li><strong>Builder summary-card streaming</strong> · live tool call progress instead of waiting for the agent to finish</li>
-      <li><strong>Per-project agent storage</strong> · the agent loop sees the active tab's project overlay (quick commands already do)</li>
       <li><strong>/tab pop</strong> · promote a tab into its own OS window</li>
       <li><strong>Builder publish UX polish</strong> · README templating, repo description, license picker</li>
       <li><strong>MCP startup-failure error cards</strong> · show the stderr tail inline if the auto-restart fails</li>
