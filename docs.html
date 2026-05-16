@@ -29,6 +29,11 @@
     --serif: var(--sans);
   }
   * { box-sizing: border-box }
+  /* Anchor jumps need to clear the sticky <header.top> bar. Without
+     scroll-padding the browser scrolls the target to viewport y=0,
+     where the sticky header overlaps it. ~70px covers desktop padding;
+     mobile shrinks to ~52px via the smaller @media below. */
+  html { scroll-padding-top: 76px; scroll-behavior: smooth; }
   body {
     margin: 0; padding: 0;
     font-family: var(--sans);
@@ -141,6 +146,11 @@
   /* Phone-sized: tighten padding, shrink headings, stack tables so wide */
   /* code samples don't trigger horizontal scroll on the whole page. */
   @media (max-width: 600px) {
+    /* Slightly shorter sticky header on mobile (~52px including the
+       compact .top__inner padding) so anchor jumps land cleanly under
+       it. The side nav is `position: static` at this breakpoint, so
+       only the top bar eats scroll. */
+    html { scroll-padding-top: 60px; }
     main { padding: 24px 16px; max-width: 100%; }
     h1 { font-size: 26px; }
     h2 { font-size: 20px; margin: 36px 0 12px; padding-top: 24px; }
