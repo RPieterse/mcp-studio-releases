@@ -375,7 +375,12 @@
     <p><strong>This is a phased feature.</strong> Today: the view, the library with stale-path detection, scaffold creation, load-an-existing-folder, read-only file browsing. Coming up: AI-driven scaffolding from your prompt, an editable in-panel editor with conflict resolution, a debug-log tail, and one-click publish to GitHub.</p>
 
     <h2 id="gallery">Gallery</h2>
-    <p>Type <code>/gallery</code> in the panel to fetch the curated list of third-party MCPs Studio knows about. Each entry comes with a one-line summary and an <code>/install</code> command — copy-paste it to install. The registry is a single JSON file served from this site (<a href="https://rpieterse.github.io/mcp-studio-releases/gallery.json"><code>gallery.json</code></a>) — Studio fetches it over HTTPS on demand, with a short in-memory cache so repeated calls are cheap. Pull requests against <a href="https://github.com/RPieterse/mcp-studio-releases"><code>RPieterse/mcp-studio-releases</code></a> are welcome to add or update entries; the schema is documented in <code>schema_version: 1</code> at the top of that file.</p>
+    <p>Two ways to browse the curated list of third-party MCPs:</p>
+    <ul>
+      <li><strong>Settings → Gallery</strong> — search across name / summary / tags, with a one-click <strong>Install</strong> button on each entry. Already-installed MCPs surface as an "Installed" pill instead. Tab opens directly to the search box.</li>
+      <li><strong><code>/gallery</code></strong> in the panel — renders the same list as a transcript card with ready-to-paste <code>/install</code> lines. Useful when you're already in flow and don't want to leave the panel.</li>
+    </ul>
+    <p>The registry is a single JSON file served from this site (<a href="https://rpieterse.github.io/mcp-studio-releases/gallery.json"><code>gallery.json</code></a>) — Studio fetches it over HTTPS on demand, with a short in-memory cache so repeated views are cheap. Pull requests against <a href="https://github.com/RPieterse/mcp-studio-releases"><code>RPieterse/mcp-studio-releases</code></a> are welcome to add or update entries; the schema is documented in <code>schema_version: 1</code> at the top of that file.</p>
 
     <h2 id="mobile">Mobile remote-control</h2>
     <p>Drive Studio from your phone over your tunnel (Tailscale, Cloudflare Tunnel, ngrok, ZeroTier — whichever you already use). The phone is a thin client: every MCP, every agent call still runs on the desktop. Studio operates no cloud infrastructure.</p>
