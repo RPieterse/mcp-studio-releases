@@ -92,6 +92,10 @@
     transition: color 120ms ease;
   }
   .top__nav a:hover { color: var(--text); }
+
+  /* Hamburger (mobile only) */
+  .nav-toggle { display: none; }
+  .hamburger { display: none; }
   .top__nav .pill {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 5px 10px; border: 1px solid var(--rule-2); border-radius: 999px;
@@ -329,6 +333,40 @@
     .container { padding: 0 24px; }
     .hero { padding: 64px 0 56px; }
     .product { padding: 64px 0 56px; }
+
+    /* Hamburger for narrow viewports — the nav has 4-5 items + a pill,
+       so it wraps to a second line below this breakpoint without it. */
+    .top__inner { position: relative; }
+    .hamburger {
+      display: flex; flex-direction: column; justify-content: space-between;
+      width: 22px; height: 16px; cursor: pointer; padding: 2px;
+      background: transparent; border: 0;
+    }
+    .hamburger span {
+      display: block; height: 2px; width: 100%;
+      background: var(--text); border-radius: 1px;
+      transition: transform 200ms ease, opacity 200ms ease;
+    }
+    .top__nav {
+      position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; gap: 0; align-items: stretch;
+      background: rgba(10, 11, 19, 0.96);
+      backdrop-filter: saturate(120%) blur(14px);
+      -webkit-backdrop-filter: saturate(120%) blur(14px);
+      border-bottom: 1px solid var(--rule);
+      max-height: 0; overflow: hidden; pointer-events: none;
+      transition: max-height 220ms ease;
+    }
+    .top__nav a {
+      padding: 14px 24px; border-bottom: 1px solid var(--rule);
+      font-size: 12px;
+    }
+    .top__nav a:last-of-type { border-bottom: none; }
+    .top__nav .pill { margin: 12px 24px 14px; align-self: flex-start; }
+    .nav-toggle:checked ~ .top__nav { max-height: 360px; pointer-events: auto; }
+    .nav-toggle:checked ~ .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle:checked ~ .hamburger span:nth-child(2) { opacity: 0; }
+    .nav-toggle:checked ~ .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
   }
 
   /* ============================================================ */
@@ -524,10 +562,14 @@
 
 <header class="top">
   <div class="container top__inner">
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
     <a class="brand" href="/">
       <span class="mark" aria-hidden="true"></span>
       <span>MCP&nbsp;Studio <span class="sub">/&nbsp;<span id="latestVersionInline">v0.1.12</span></span></span>
     </a>
+    <label for="nav-toggle" class="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </label>
     <nav class="top__nav">
       <a href="#features">Features</a>
       <a href="#build">Build an MCP</a>
