@@ -196,6 +196,7 @@
     <a href="#builder">MCP Builder</a>
     <a href="#mobile">Mobile</a>
     <a href="#installing">Installing MCPs</a>
+    <a href="#roadmap">Roadmap</a>
 
     <h2>Bundled MCPs</h2>
     <a href="#chrome">Chrome</a>
@@ -860,6 +861,39 @@ node apps/cli/dist/index.js install --path /path/to/your-mcp</code></pre>
       <li>Share the URL: <code>/install https://github.com/your-org/your-mcp</code></li>
     </ol>
     <p>Studio clones with <code>--depth=1</code> at the default branch. Bump <code>version</code> on every release. Major bumps re-prompt for permissions; minor / patch don't.</p>
+
+    <h1 id="roadmap" style="margin-top: 56px">Roadmap</h1>
+    <p class="lead">What's shipped today, what's planned. Listed here before scope shifts during a sprint — adjust expectations accordingly. Mobile-specific roadmap lives on <a href="https://rpieterse.github.io/mcp-studio-mobile-releases/docs.html#roadmap">the mobile docs</a>.</p>
+    <h2 id="roadmap-shipped">Shipped</h2>
+    <ul>
+      <li><strong>FAB + panel modes</strong> · floating compact panel anchored under a draggable button, plus a window-mode toggle</li>
+      <li><strong>Slash commands + autocomplete</strong> · built-in + MCP-declared <code>quick_commands</code></li>
+      <li><strong>AI agent providers</strong> · Anthropic / OpenAI / Gemini APIs, plus local CLIs (Claude Code, Gemini CLI, Codex CLI)</li>
+      <li><strong>Voice input</strong> · one-shot + continuous, via the WebView's speech recognition</li>
+      <li><strong>Projects</strong> · persistent conversation contexts with per-project transcripts + agent memory</li>
+      <li><strong>Schedules</strong> · timed prompts with per-fire history threaded as agent memory</li>
+      <li><strong>Tabs</strong> · multi-session panel with independent transcripts + memory, persisted across launches</li>
+      <li><strong>MCP Builder</strong> · scaffold from a prompt, edit in-panel, install hooks, test commands, publish to GitHub</li>
+      <li><strong>Mobile remote-control</strong> · thin client over your tunnel, dark mode, OTA updates</li>
+      <li><strong>Per-MCP storage primitive</strong> · cross-MCP reads via <code>${storage.&lt;id&gt;.&lt;key&gt;}</code></li>
+      <li><strong>Host bridge</strong> · MCPs can drive Studio's own panel (show/hide/toggle, FAB move)</li>
+      <li><strong>Umbrella keychain</strong> · single keychain prompt at launch instead of one per credential</li>
+      <li><strong>OAuth token persistence</strong> · access + refresh tokens survive Studio restarts</li>
+      <li><strong>Auto-updates</strong> · in-app updater with signed releases</li>
+    </ul>
+    <h2 id="roadmap-planned">Planned</h2>
+    <ul>
+      <li><strong>Builder summary-card streaming</strong> · live tool call progress instead of waiting for the agent to finish</li>
+      <li><strong>store_result manifest extraction</strong> · quick commands can write tool-call outputs back to storage for chained <code>${storage}</code> reads</li>
+      <li><strong>Per-project agent storage</strong> · the agent loop sees the active tab's project overlay (quick commands already do)</li>
+      <li><strong>Auto-reauth on expired OAuth</strong> · refresh access tokens transparently without re-pairing</li>
+      <li><strong>Gallery registry</strong> · curated MCP discovery on the public site, not just paste-URL</li>
+      <li><strong>Inline-mode autocomplete</strong> · dropdown positioning + ghost overlay for the REPL input mode</li>
+      <li><strong>/tab pop</strong> · promote a tab into its own OS window</li>
+      <li><strong>Builder publish UX polish</strong> · README templating, repo description, license picker</li>
+      <li><strong>MCP startup-failure error cards</strong> · show the stderr tail inline if the auto-restart fails</li>
+    </ul>
+    <p>Open an issue on <a href="https://github.com/RPieterse/mcp-studio-releases/issues" target="_blank" rel="noopener">the releases repo</a> if you want to nudge priorities.</p>
   </main>
 </div>
 </body>
