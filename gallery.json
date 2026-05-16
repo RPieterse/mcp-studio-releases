@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "dev.mcpwidget.git",
+      "name": "Git",
+      "summary": "Workspace + repo browsing: list branches, stage / commit / push, read diffs and history. Studio's source-of-truth for the active workspace path.",
+      "git_url": "https://github.com/RPieterse/mcp-studio-git-mcp",
+      "tags": ["dev-tools", "agent"]
+    },
+    {
+      "id": "dev.mcpwidget.claude_code",
+      "name": "Claude Code",
+      "summary": "Run a Claude Code CLI session against the active workspace and stream the agent loop back into Studio's transcript.",
+      "git_url": "https://github.com/RPieterse/mcp-studio-claude-code-mcp",
+      "tags": ["dev-tools", "agent"]
+    },
+    {
+      "id": "com.rohanpieterse.gsheets",
+      "name": "Google Sheets (service account)",
+      "summary": "Create / read / modify Google Sheets via a service account. Files are owned by the SA — best for headless or scheduled jobs.",
+      "git_url": "https://github.com/RPieterse/mcp-studio-google-sheets-mcp",
+      "tags": ["data", "google-services"]
+    },
+    {
+      "id": "com.rohanpieterse.gsheets_oauth",
+      "name": "Google Sheets (OAuth)",
+      "summary": "Create / read / modify Google Sheets as the authenticated user. Files live in your personal Drive — best for interactive use.",
+      "git_url": "https://github.com/RPieterse/mcp-studio-google-sheets-oauth-mcp",
+      "tags": ["data", "google-services"]
+    }
+  ]
+}

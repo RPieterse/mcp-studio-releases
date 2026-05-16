@@ -232,6 +232,7 @@
     <a href="#projects">Projects</a>
     <a href="#schedules">Schedules</a>
     <a href="#builder">MCP Builder</a>
+    <a href="#gallery">Gallery</a>
     <a href="#mobile">Mobile</a>
     <a href="#installing">Installing MCPs</a>
     <a href="#roadmap">Roadmap</a>
@@ -272,6 +273,7 @@
       <tr><td><code>/help</code></td><td>Show all built-in commands</td></tr>
       <tr><td><code>/mcp-servers</code></td><td>List installed MCPs (use <code>-name &lt;id&gt;</code> to drill into one)</td></tr>
       <tr><td><code>/install &lt;git-url-or-path&gt;</code></td><td>Install a new MCP from git or a local directory</td></tr>
+      <tr><td><code>/gallery</code></td><td>Browse the curated public gallery and copy an <code>/install</code> line for any entry</td></tr>
       <tr><td><code>/configure [mcp-id]</code></td><td>Open settings, optionally focused on an MCP</td></tr>
       <tr><td><code>/project [new|switch|delete|end]</code></td><td>Persistent conversation contexts — see <a href="#projects">Projects</a></td></tr>
       <tr><td><code>/build-mcp [new|load|switch|remove]</code></td><td>Open the MCP Builder — scaffold, load, or manage local MCPs you're authoring</td></tr>
@@ -370,7 +372,10 @@
       <tr><td><code>/build-mcp remove &lt;id&gt;</code></td><td>Drop a build from your library (loaded folders are never deleted from disk)</td></tr>
     </table>
     <p><strong>Where things live.</strong> Scaffolded builds materialize under <code>~/.mcp-widget/built/&lt;id&gt;/</code>; loaded builds stay wherever you keep them. The library itself is at <code>~/.mcp-widget/builder.json</code>. Once a build's manifest validates, the existing local-install path takes over — a built MCP behaves like any third-party MCP from that point on.</p>
-    <p><strong>This is a phased feature.</strong> Today: the view, the library with stale-path detection, scaffold creation, load-an-existing-folder, read-only file browsing. Coming up: AI-driven scaffolding from your prompt, an editable in-panel editor with conflict resolution, a debug-log tail, and one-click publish to GitHub. See <code>docs/MCP_BUILDER.md</code> for the full roadmap.</p>
+    <p><strong>This is a phased feature.</strong> Today: the view, the library with stale-path detection, scaffold creation, load-an-existing-folder, read-only file browsing. Coming up: AI-driven scaffolding from your prompt, an editable in-panel editor with conflict resolution, a debug-log tail, and one-click publish to GitHub.</p>
+
+    <h2 id="gallery">Gallery</h2>
+    <p>Type <code>/gallery</code> in the panel to fetch the curated list of third-party MCPs Studio knows about. Each entry comes with a one-line summary and an <code>/install</code> command — copy-paste it to install. The registry is a single JSON file served from this site (<a href="https://rpieterse.github.io/mcp-studio-releases/gallery.json"><code>gallery.json</code></a>) — Studio fetches it over HTTPS on demand, with a short in-memory cache so repeated calls are cheap. Pull requests against <a href="https://github.com/RPieterse/mcp-studio-releases"><code>RPieterse/mcp-studio-releases</code></a> are welcome to add or update entries; the schema is documented in <code>schema_version: 1</code> at the top of that file.</p>
 
     <h2 id="mobile">Mobile remote-control</h2>
     <p>Drive Studio from your phone over your tunnel (Tailscale, Cloudflare Tunnel, ngrok, ZeroTier — whichever you already use). The phone is a thin client: every MCP, every agent call still runs on the desktop. Studio operates no cloud infrastructure.</p>
@@ -918,6 +923,7 @@ node apps/cli/dist/index.js install --path /path/to/your-mcp</code></pre>
       <li><strong>Umbrella keychain</strong> · single keychain prompt at launch instead of one per credential</li>
       <li><strong>OAuth token persistence</strong> · access + refresh tokens survive Studio restarts</li>
       <li><strong>Auto-updates</strong> · in-app updater with signed releases</li>
+      <li><strong>Gallery</strong> · <code>/gallery</code> fetches a curated registry and surfaces ready-to-paste <code>/install</code> lines for vetted third-party MCPs</li>
     </ul>
     <h2 id="roadmap-planned">Planned</h2>
     <ul>
@@ -925,7 +931,6 @@ node apps/cli/dist/index.js install --path /path/to/your-mcp</code></pre>
       <li><strong>store_result manifest extraction</strong> · quick commands can write tool-call outputs back to storage for chained <code>${storage}</code> reads</li>
       <li><strong>Per-project agent storage</strong> · the agent loop sees the active tab's project overlay (quick commands already do)</li>
       <li><strong>Auto-reauth on expired OAuth</strong> · refresh access tokens transparently without re-pairing</li>
-      <li><strong>Gallery registry</strong> · curated MCP discovery on the public site, not just paste-URL</li>
       <li><strong>/tab pop</strong> · promote a tab into its own OS window</li>
       <li><strong>Builder publish UX polish</strong> · README templating, repo description, license picker</li>
       <li><strong>MCP startup-failure error cards</strong> · show the stderr tail inline if the auto-restart fails</li>
