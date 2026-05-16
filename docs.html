@@ -430,7 +430,7 @@
         <td><code>https://github.com/RPieterse/mcp-studio-google-sheets-oauth-mcp</code></td>
       </tr>
     </table>
-    <p>See the <code>docs/MCP_CONTRACT.md</code> in the main repo for the side-by-side trade-off between the two Google Sheets MCPs (service account vs OAuth — ownership, sharing, personal-project quirks).</p>
+    <p><strong>Service account vs OAuth — which to use?</strong> Service account: Sheets are owned by the service account; great for headless/scheduled jobs but the SA owns the files and shares aren't tied to a personal account. OAuth: Sheets are owned by you in your personal Drive; great for interactive use and natural sharing/visibility, but every install needs you to complete an OAuth consent flow.</p>
 
     <h1 style="margin-top: 56px">Bundled MCPs</h1>
     <p>These ship with Studio and can't be uninstalled. Everything else lives in the <a href="#mcp-library">MCP library</a> as a regular <code>/install</code> target.</p>
@@ -926,7 +926,6 @@ node apps/cli/dist/index.js install --path /path/to/your-mcp</code></pre>
       <li><strong>Per-project agent storage</strong> · the agent loop sees the active tab's project overlay (quick commands already do)</li>
       <li><strong>Auto-reauth on expired OAuth</strong> · refresh access tokens transparently without re-pairing</li>
       <li><strong>Gallery registry</strong> · curated MCP discovery on the public site, not just paste-URL</li>
-      <li><strong>Inline-mode autocomplete</strong> · dropdown positioning + ghost overlay for the REPL input mode</li>
       <li><strong>/tab pop</strong> · promote a tab into its own OS window</li>
       <li><strong>Builder publish UX polish</strong> · README templating, repo description, license picker</li>
       <li><strong>MCP startup-failure error cards</strong> · show the stderr tail inline if the auto-restart fails</li>
