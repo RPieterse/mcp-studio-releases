@@ -545,6 +545,7 @@
           <li><code>${storage.&lt;key&gt;}</code> — your MCP's own stored value (see <a href="#storage">Storage</a> below).</li>
         </ul>
       </li>
+      <li><strong><code>store_result</code></strong> — after the tool call succeeds, write part or all of the result back to this MCP's own storage. <code>{ "key": "last_weather" }</code> stores the whole tool output as a string. Add a dotted <code>path</code> (e.g. <code>{ "key": "last_temp_c", "path": "current.temp_c" }</code>) to extract a single field from a JSON result. The stored value chains into the next command via <code>${storage.&lt;key&gt;}</code> — quick commands become composable pipelines. If the result isn't JSON or the path doesn't resolve, the existing storage value is left untouched.</li>
     </ul>
 
     <h2 id="auth">Authentication</h2>
@@ -553,7 +554,8 @@
     <h3>api_key</h3>
     <p>Studio renders a form derived from <code>auth.fields</code>. <strong>Storage routing is per-field:</strong> any field marked <code>"secret": true</code> in the manifest goes to your OS keychain (macOS Keychain Access / Linux gnome-keyring / Windows Credential Manager), while non-secret fields go to local app storage. Both halves are merged at MCP spawn time and injected into env via <code>${secrets.&lt;store_as&gt;.&lt;field&gt;}</code>. So a manifest like <code>fields: [{ key: "service_account_json", secret: true }, { key: "user_email", secret: false }]</code> puts the JSON in the keychain and the email in local storage — never the other way round.</p>
     <h3>oauth2 / oauth2_pkce</h3>
-    <p>Click <strong>Authorize in browser</strong>. Studio spawns a one-shot loopback server, opens the authorize URL, captures the redirect, exchanges the code for tokens, stores in keychain. Refresh handled automatically.</p>
+    <p>Click <strong>Authorize in browser</strong>. Studio spawns a one-shot loopback server, opens the authorize URL, captures the redirect, exchanges the code for tokens, and stores them in the OS keychain.</p>
+    <p><strong>Auto-reauth on expired tokens.</strong> When a tool call fails with an auth-expired signal (401, <code>invalid_token</code>, <code>expired_token</code>, "token has expired", etc.), Studio detects the pattern in the MCP's error response, refreshes the access token in place using the saved <code>refresh_token</code>, respawns the MCP so the new token lands in <code>env</code>, and retries the call — once. The user sees the successful retry, never the underlying expiry. Falls through to the original error if the refresh itself fails (e.g. refresh token revoked) — at that point you need to re-authorize manually via <strong>Settings → MCP Servers → &lt;your MCP&gt;</strong>.</p>
 
     <h2 id="storage">Storage</h2>
     <p>Many MCPs need a small amount of per-MCP state that isn't a secret — an active project path, a default branch, a preferred unit system. Declare a <code>storage</code> block in the manifest and Studio gives you:</p>
@@ -928,14 +930,14 @@ node apps/cli/dist/index.js install --path /path/to/your-mcp</code></pre>
       <li><strong>Umbrella keychain</strong> · single keychain prompt at launch instead of one per credential</li>
       <li><strong>OAuth token persistence</strong> · access + refresh tokens survive Studio restarts</li>
       <li><strong>Auto-updates</strong> · in-app updater with signed releases</li>
-      <li><strong>Gallery</strong> · <code>/gallery</code> fetches a curated registry and surfaces ready-to-paste <code>/install</code> lines for vetted third-party MCPs</li>
+      <li><strong>Gallery</strong> · <code>/gallery</code> fetches a curated registry and surfaces ready-to-paste <code>/install</code> lines for vetted third-party MCPs; <strong>Settings → Gallery</strong> adds search and one-click install</li>
+      <li><strong><code>store_result</code> manifest field</strong> · quick commands write tool outputs back to storage (with optional JSON path) for chained <code>${storage}</code> reads</li>
+      <li><strong>Auto-reauth on expired OAuth</strong> · detects auth-expired errors, refreshes tokens in place, respawns the MCP, retries — once. Falls through with a re-authorize hint if the refresh itself fails</li>
     </ul>
     <h2 id="roadmap-planned">Planned</h2>
     <ul>
       <li><strong>Builder summary-card streaming</strong> · live tool call progress instead of waiting for the agent to finish</li>
-      <li><strong>store_result manifest extraction</strong> · quick commands can write tool-call outputs back to storage for chained <code>${storage}</code> reads</li>
       <li><strong>Per-project agent storage</strong> · the agent loop sees the active tab's project overlay (quick commands already do)</li>
-      <li><strong>Auto-reauth on expired OAuth</strong> · refresh access tokens transparently without re-pairing</li>
       <li><strong>/tab pop</strong> · promote a tab into its own OS window</li>
       <li><strong>Builder publish UX polish</strong> · README templating, repo description, license picker</li>
       <li><strong>MCP startup-failure error cards</strong> · show the stderr tail inline if the auto-restart fails</li>
