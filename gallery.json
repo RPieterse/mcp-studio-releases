@@ -28,6 +28,13 @@
       "summary": "Create / read / modify Google Sheets as the authenticated user. Files live in your personal Drive — best for interactive use.",
       "git_url": "https://github.com/RPieterse/mcp-studio-google-sheets-oauth-mcp",
       "tags": ["data", "google-services"]
+    },
+    {
+      "id": "com.mcpstudio.gmail",
+      "name": "Gmail (OAuth)",
+      "summary": "Control Gmail from the agent — list unread, search, read, draft, send, and trash emails. BYO Google OAuth client; loopback redirect handled by Studio.",
+      "git_url": "https://github.com/RPieterse/mcp-studio-gmail-mcp",
+      "tags": ["mail", "google-services", "agent"]
     }
   ]
 }

@@ -441,6 +441,11 @@
         <td>Create / read / modify Sheets as the authenticated user. Files owned by you, in your personal Drive. Best for interactive use.</td>
         <td><code>https://github.com/RPieterse/mcp-studio-google-sheets-oauth-mcp</code></td>
       </tr>
+      <tr>
+        <td><strong>Gmail (OAuth)</strong><br><span class="pill">com.mcpstudio.gmail</span></td>
+        <td>List unread, search, read, draft, send, and trash emails as the authenticated Gmail user. BYO Google OAuth client (Client ID + Secret); Studio's loopback redirect handles the consent flow.</td>
+        <td><code>https://github.com/RPieterse/mcp-studio-gmail-mcp</code></td>
+      </tr>
     </table>
     <p><strong>Service account vs OAuth — which to use?</strong> Service account: Sheets are owned by the service account; great for headless/scheduled jobs but the SA owns the files and shares aren't tied to a personal account. OAuth: Sheets are owned by you in your personal Drive; great for interactive use and natural sharing/visibility, but every install needs you to complete an OAuth consent flow.</p>
 
