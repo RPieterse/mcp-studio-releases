@@ -414,7 +414,7 @@
     <h2 id="cli">CLI</h2>
     <p>A terminal REPL for MCP Studio — same on-disk state as the desktop, same sidecar, same agent loop. Install once with npm; run alongside the desktop or instead of it.</p>
     <p>→ <strong>CLI landing + install instructions:</strong> <a href="cli.html">cli.html</a></p>
-    <pre><code>npm install -g @mcp-studio/cli
+    <pre><code>npm install -g mcp-studio-cli
 mcp-studio</code></pre>
     <p>Boots a REPL with <code>&gt;</code>. The slash surface mirrors the desktop's: <code>/help</code>, <code>/mcp-servers</code>, <code>/install</code>, <code>/configure</code>, <code>/project</code>, <code>/schedule</code>, <code>/workspace</code>. Plain prose runs through the agent loop; <code>agent:progress</code> events stream inline; final responses render with <code>marked-terminal</code> (ANSI strips when piped).</p>
     <h3>Shared state with the desktop</h3>
