@@ -235,6 +235,7 @@
     <a href="#builder">MCP Builder</a>
     <a href="#gallery">Gallery</a>
     <a href="#mobile">Mobile</a>
+    <a href="#cli">CLI</a>
     <a href="#installing">Installing MCPs</a>
     <a href="#roadmap">Roadmap</a>
 
@@ -408,6 +409,44 @@
       <li>Voice input on the phone</li>
       <li>Editing settings / installing MCPs / driving the Builder from the phone</li>
       <li>File attachments / image prompts</li>
+    </ul>
+
+    <h2 id="cli">CLI</h2>
+    <p>A terminal REPL for MCP Studio — same on-disk state as the desktop, same sidecar, same agent loop. Install once with npm; run alongside the desktop or instead of it.</p>
+    <p>→ <strong>CLI landing + install instructions:</strong> <a href="cli.html">cli.html</a></p>
+    <pre><code>npm install -g @mcp-studio/cli
+mcp-studio</code></pre>
+    <p>Boots a REPL with <code>&gt;</code>. The slash surface mirrors the desktop's: <code>/help</code>, <code>/mcp-servers</code>, <code>/install</code>, <code>/configure</code>, <code>/project</code>, <code>/schedule</code>, <code>/workspace</code>. Plain prose runs through the agent loop; <code>agent:progress</code> events stream inline; final responses render with <code>marked-terminal</code> (ANSI strips when piped).</p>
+    <h3>Shared state with the desktop</h3>
+    <p>Both clients read and write the same <code>~/.mcp-widget/</code> tree:</p>
+    <ul>
+      <li><code>storage/&lt;mcp_id&gt;.json</code> + <code>projects/&lt;slug&gt;/mcp-storage/&lt;mcp_id&gt;.json</code> — per-MCP state, with project overlays.</li>
+      <li><code>projects/&lt;slug&gt;/{history.jsonl, agent-context.json, .name}</code> — per-project transcript + agent memory.</li>
+      <li><code>schedules.json</code> + <code>schedules/&lt;id&gt;/runs.jsonl</code> — schedules and their fire history.</li>
+      <li><code>credentials.enc</code> — AES-256-GCM vault, OS-keychain umbrella key (service <code>MCP Studio</code>, account <code>__mcp_studio_umbrella__</code>).</li>
+      <li><code>mcps/&lt;id&gt;/</code> — installed MCPs.</li>
+    </ul>
+    <p>Atomic tmp+rename writes everywhere. Last-write-wins on <code>agent-context.json</code> + <code>history.jsonl</code> if you happen to type into both clients simultaneously in the same project — usually fine, document if you want to avoid.</p>
+    <h3>Scheduler leadership</h3>
+    <p>Whichever client starts first acquires <code>~/.mcp-widget/scheduler.lock</code> and becomes the schedule fire-er. The other observes <code>runs.jsonl</code> and surfaces fires inline — no double-fires. Lock TTL is 60s, refreshed every 15s; if the leader dies, the next tick takes over.</p>
+    <h3>OAuth in the terminal</h3>
+    <p><code>/configure &lt;mcp-id&gt;</code> walks the manifest's auth fields. For <code>api_key</code> auth, secret fields land in the vault, non-secrets in <code>credentials.local.json</code>. For <code>oauth2</code> / <code>oauth2_pkce</code> auth, the CLI spins up a one-shot loopback HTTP server, opens the browser to the authorize URL, captures the callback with state + PKCE validation, then exchanges the code via the sidecar's <code>oauth_exchange</code>. The desktop is not required — the CLI can configure an MCP from a fresh machine.</p>
+    <h3>What ships in 0.1</h3>
+    <ul>
+      <li>Multi-turn REPL with persistent slash + quick commands.</li>
+      <li>Full <code>/help</code> output combining built-ins + every installed manifest's <code>quick_commands</code>.</li>
+      <li><code>/project list|new|switch|delete|end</code> seeded from disk; per-project agent memory persisted after every turn.</li>
+      <li><code>/schedule list|add|delete|run</code> with the timer loop active when the CLI is leader.</li>
+      <li><code>/configure &lt;id&gt;</code> for <code>api_key</code>, <code>oauth2</code>, and <code>oauth2_pkce</code> auth.</li>
+      <li>Host bridge that lets <code>studio-core</code>-style MCPs call <code>panel_*</code> / <code>fab_*</code> tools without crashing (they return harmless no-ops; the CLI logs <code>(noop: …)</code> to stderr so you can see what the agent asked for).</li>
+    </ul>
+    <h3>Deferred</h3>
+    <ul>
+      <li>Tabs (multi-session transcripts).</li>
+      <li>Slash + quick-command autocomplete in the readline loop.</li>
+      <li>Per-project readline history persistence.</li>
+      <li>Raw-mode secret input masking during <code>/configure</code>.</li>
+      <li>Native Windows smoke-test (macOS + Linux work today; Windows should work but is untested).</li>
     </ul>
 
     <h2 id="installing">Installing MCPs</h2>
