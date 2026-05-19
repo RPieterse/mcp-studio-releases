@@ -313,6 +313,26 @@
     </ul>
     <p>Both swap their icon for a pulsing red dot while listening. Defaults to the browser's Web Speech API. macOS will prompt for microphone permission on first use.</p>
 
+    <h2 id="elicit">Elicitation — the agent (or any MCP) can ask the user</h2>
+    <p>Studio runs a generic <strong>elicitation channel</strong>: a single primitive any in-flight tool, agent, or quick command can use to pause and ask the user something. The panel — and any paired mobile — both show the card; first responder wins, the loser's card collapses to "answered elsewhere."</p>
+    <p>Four shapes cover every request:</p>
+    <table>
+      <tr><th>Shape</th><th>What it renders</th></tr>
+      <tr><td><code>approve</code></td><td>Allow / Deny buttons. Defaults to "Allow" / "Deny"; the MCP can override labels.</td></tr>
+      <tr><td><code>select_one</code></td><td>Radio list. Single-click submits when there are ≤ 5 options; longer lists require an explicit Submit.</td></tr>
+      <tr><td><code>select_many</code></td><td>Checkbox list with optional <code>min</code> / <code>max</code> validation.</td></tr>
+      <tr><td><code>free_text</code></td><td><code>input</code> (or <code>textarea</code> when <code>multiline: true</code>). Enter submits; Shift+Enter newline.</td></tr>
+    </table>
+    <p>Four sources can trigger one:</p>
+    <ul>
+      <li><strong>LLM provider</strong> — the agent loop adds a synthetic <code>studio.ask_user</code> tool whenever the run has an elicit hook (every desktop run does). The model can call it for plan-mode confirmations, missing parameters, or destructive-action approval. If the user dismisses the card, the whole agent run stops with <code>stoppedFor: "dismissed"</code>.</li>
+      <li><strong>MCP server</strong> — spec-compliant <code>elicitation/create</code> requests. Use <code>server.elicitInput({ message, requestedSchema })</code> from the SDK; Studio maps the JSON Schema to one of the four shapes (<code>boolean</code> → approve, <code>string + enum</code> → select_one, <code>array of enum</code> → select_many, <code>string</code> → free_text). Single-field form schemas are also accepted. Dismissed returns <code>{ action: "cancel" }</code> per spec; the server decides whether to abort the tool call.</li>
+      <li><strong>Quick command</strong> — declare an <code>elicit</code> block on a <code>quick_commands</code> entry to pause before the tool fires. The response is bound under <code>args.&lt;key&gt;</code> (default key: <code>answer</code>) so downstream interpolation can reference it. <code>context_requirements</code> entries can also opt-in with <code>type: "elicit"</code> + a <code>shape</code>.</li>
+      <li><strong>Studio Core</strong> — bundled <code>dev.mcpwidget.core</code> exposes <code>ask_user</code> as a regular MCP tool. Use it for explicit, manifest-declared prompts (<code>/ask &lt;question&gt;</code>).</li>
+    </ul>
+    <p><strong>Mobile parity.</strong> Every elicit broadcasts to paired mobile clients via <code>elicit:request</code>; mobile renders the same card. Whichever surface answers first wins (registry returns <code>false</code> for the second responder).</p>
+    <p><strong>Late-join replay.</strong> If you reload the panel mid-elicit, pending requests for your tab — plus any schedule-fired ones with <code>tabId: null</code> — are re-fetched and re-inserted into the transcript. Closing a tab dismisses every elicit parked on it so callers don't hang.</p>
+
     <h2 id="host-bridge">Host bridge — Studio drives itself</h2>
     <p>Studio's Rust shell exposes a tiny loopback HTTP control surface that any installed MCP can call. Bundled <strong>Studio Core</strong> uses this to give the agent four self-control tools:</p>
     <table>
@@ -375,7 +395,8 @@
       <tr><td><code>/build-mcp remove &lt;id&gt;</code></td><td>Drop a build from your library (loaded folders are never deleted from disk)</td></tr>
     </table>
     <p><strong>Where things live.</strong> Scaffolded builds materialize under <code>~/.mcp-widget/built/&lt;id&gt;/</code>; loaded builds stay wherever you keep them. The library itself is at <code>~/.mcp-widget/builder.json</code>. Once a build's manifest validates, the existing local-install path takes over — a built MCP behaves like any third-party MCP from that point on.</p>
-    <p><strong>This is a phased feature.</strong> Today: the view, the library with stale-path detection, scaffold creation, load-an-existing-folder, read-only file browsing. Coming up: AI-driven scaffolding from your prompt, an editable in-panel editor with conflict resolution, a debug-log tail, and one-click publish to GitHub.</p>
+    <p><strong>Publish to GitHub.</strong> The Builder pushes a build to a fresh GitHub repo via the <code>gh</code> CLI. First publish runs <code>gh repo create</code>; subsequent publishes detect the existing <code>origin</code> remote and just <code>git push</code> the new commits, so iterating on a published MCP is a single click. The library entry tracks published state — a <strong>Published</strong> badge surfaces on the row, and locally-imported builds with an existing GitHub origin are recognised on import. If the build doesn't have a <code>README.md</code>, the publish flow auto-generates one from the manifest (name, description, install hooks, auth fields, quick commands). User-written READMEs are never overwritten.</p>
+    <p><strong>This is a phased feature.</strong> Today: the view, the library with stale-path detection + published-state tracking, scaffold creation, load-an-existing-folder, in-panel editor, debug-log tail, and one-click publish to GitHub (create-or-push). Coming up: richer collaboration affordances around published builds.</p>
 
     <h2 id="gallery">Gallery</h2>
     <p>Two ways to browse the curated list of third-party MCPs:</p>
