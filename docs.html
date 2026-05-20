@@ -328,9 +328,9 @@
       <li><strong>LLM provider</strong> — the agent loop adds a synthetic <code>studio.ask_user</code> tool whenever the run has an elicit hook (every desktop run does). The model can call it for plan-mode confirmations, missing parameters, or destructive-action approval. If the user dismisses the card, the whole agent run stops with <code>stoppedFor: "dismissed"</code>.</li>
       <li><strong>MCP server</strong> — spec-compliant <code>elicitation/create</code> requests. Use <code>server.elicitInput({ message, requestedSchema })</code> from the SDK; Studio maps the JSON Schema to one of the four shapes (<code>boolean</code> → approve, <code>string + enum</code> → select_one, <code>array of enum</code> → select_many, <code>string</code> → free_text). Single-field form schemas are also accepted. Dismissed returns <code>{ action: "cancel" }</code> per spec; the server decides whether to abort the tool call.</li>
       <li><strong>Quick command</strong> — declare an <code>elicit</code> block on a <code>quick_commands</code> entry to pause before the tool fires. The response is bound under <code>args.&lt;key&gt;</code> (default key: <code>answer</code>) so downstream interpolation can reference it. <code>context_requirements</code> entries can also opt-in with <code>type: "elicit"</code> + a <code>shape</code>.</li>
-      <li><strong>Studio Core</strong> — bundled <code>dev.mcpwidget.core</code> exposes <code>ask_user</code> as a regular MCP tool. Use it for explicit, manifest-declared prompts (<code>/ask &lt;question&gt;</code>).</li>
+      <li><strong>Studio Core</strong> — bundled <code>dev.mcpwidget.core</code> exposes <code>ask_user</code> as a regular MCP tool. The agent calls it directly via tool_use; it isn't a user-callable slash command.</li>
     </ul>
-    <p><strong>Mobile parity.</strong> Every elicit broadcasts to paired mobile clients via <code>elicit:request</code>; mobile renders the same card. Whichever surface answers first wins (registry returns <code>false</code> for the second responder).</p>
+    <p><strong>Cross-surface parity.</strong> Every elicit broadcasts to paired mobile + CLI clients via <code>elicit:request</code>; each surface renders the four shapes in its own idiom (desktop card, React Native card on mobile, readline prompts in the CLI: <code>y/n</code> for approve, numbered menu for select_one, space-separated numbers for select_many, free-text input). Whichever surface answers first wins (registry returns <code>false</code> for the second responder; the loser's card collapses to "answered elsewhere"). The CLI auto-dismisses elicits when stdin isn't a TTY so piped runs don't hang.</p>
     <p><strong>Late-join replay.</strong> If you reload the panel mid-elicit, pending requests for your tab — plus any schedule-fired ones with <code>tabId: null</code> — are re-fetched and re-inserted into the transcript. Closing a tab dismisses every elicit parked on it so callers don't hang.</p>
 
     <h2 id="host-bridge">Host bridge — Studio drives itself</h2>
@@ -603,7 +603,7 @@ mcp-studio</code></pre>
   "arg_key": "message",
   "args": { "cwd": "${storage.active_workspace_path}" }
 }</code></pre>
-    <p>Three knobs:</p>
+    <p>Four knobs:</p>
     <ul>
       <li><strong><code>arg_key</code></strong> — the user's input after the trigger becomes the value at this key. <code>/commit fix typo</code> → <code>{message: "fix typo"}</code>.</li>
       <li><strong><code>args</code></strong> — static defaults merged on top. String values support two kinds of interpolation:
@@ -613,7 +613,29 @@ mcp-studio</code></pre>
         </ul>
       </li>
       <li><strong><code>store_result</code></strong> — after the tool call succeeds, write part or all of the result back to this MCP's own storage. <code>{ "key": "last_weather" }</code> stores the whole tool output as a string. Add a dotted <code>path</code> (e.g. <code>{ "key": "last_temp_c", "path": "current.temp_c" }</code>) to extract a single field from a JSON result. The stored value chains into the next command via <code>${storage.&lt;key&gt;}</code> — quick commands become composable pipelines. If the result isn't JSON or the path doesn't resolve, the existing storage value is left untouched.</li>
+      <li><strong><code>platforms</code></strong> — array of <code>"desktop"</code> / <code>"mobile"</code> / <code>"cli"</code> declaring which Studio surfaces should expose this command. Omit or use an empty array to mean "all platforms" (the back-compat default). Mobile / CLI clients filter autocomplete + suggestion lists by their own surface so a command tied to a specific runtime (browser tab control, FAB window movement, local file path) doesn't appear where it can't actually run.
+        <pre><code>{
+  "trigger": "fab",
+  "description": "Move the FAB to {x, y}",
+  "tool": "fab_move",
+  "platforms": ["desktop"]
+}</code></pre>
+      </li>
     </ul>
+
+    <h3 id="context-requirements">Context requirements (forms)</h3>
+    <p>A quick command with missing required args pauses on a typed form before the tool fires. Declare <code>context_requirements</code> and Studio renders type-appropriate inputs for any missing fields:</p>
+    <pre><code>{
+  "trigger": "weather",
+  "description": "Get the current weather for a city",
+  "tool": "weather",
+  "context_requirements": [
+    { "key": "city", "type": "text", "label": "City", "required": true },
+    { "key": "country", "type": "text", "label": "Country", "required": true }
+  ]
+}</code></pre>
+    <p>Supported field <code>type</code>s: <code>text</code>, <code>number</code>, <code>boolean</code>, <code>enum</code> (with <code>options</code>), <code>workspace</code>, and <code>elicit</code> (renders the field as an elicit card instead of an inline input — see <a href="#elicit">Elicitation</a>).</p>
+    <p><strong>Cross-surface rendering.</strong> The form is a transcript item, so all three surfaces render it natively: the desktop panel shows the existing inline form, mobile shows a React Native card with switches / pickers / numeric keyboard, and the CLI REPL prompts for each missing field via readline (type coercion: <code>y</code>/<code>n</code> for boolean, parsed numbers, plain text). Whichever surface submits first wins via the desktop's <code>pendingForms</code> map; the loser sees the form transition to "answered elsewhere".</p>
 
     <h2 id="auth">Authentication</h2>
     <h3>none</h3>
