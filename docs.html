@@ -364,14 +364,29 @@
       <tr><th>Command</th><th>What it does</th></tr>
       <tr><td><code>/schedule</code></td><td>list all schedules</td></tr>
       <tr><td><code>/schedule add</code></td><td>open the new-schedule form in Settings</td></tr>
+      <tr><td><code>/schedule add "&lt;prompt&gt;" &lt;when&gt;</code></td><td>create a schedule inline — see "When?" patterns below</td></tr>
       <tr><td><code>/schedule rm &lt;id&gt;</code></td><td>delete a schedule</td></tr>
       <tr><td><code>/schedule run &lt;id&gt;</code></td><td>fire a schedule immediately (advances <code>next_fire_at</code>)</td></tr>
     </table>
-    <p>Two trigger kinds:</p>
+    <p>Three trigger kinds:</p>
     <ul>
       <li><strong>Once</strong> — fires at a specific date/time, then disables itself.</li>
-      <li><strong>Every N minutes</strong> — fires repeatedly. If your laptop slept past several fire times, the schedule fires <em>once</em> on resume (within a 1-hour grace), not N backlogged copies.</li>
+      <li><strong>Every N minutes</strong> — elapsed-time interval. If your laptop slept past several fire times, the schedule fires <em>once</em> on resume (within a 1-hour grace), not N backlogged copies.</li>
+      <li><strong>Recurring (Weekly)</strong> — fires on chosen weekdays at a wall-clock time of day. Drives the "alarm clock" pattern: <em>"daily at 9am"</em>, <em>"Mon+Wed at 4pm"</em>, <em>"weekdays at 7:30am"</em>, <em>"weekends at 10am"</em>. Time of day is local — if you travel, "daily at 9am" follows the device's current timezone (iOS Alarms semantics).</li>
     </ul>
+    <p>Inline-create from the slash command supports these "when?" forms:</p>
+    <table>
+      <tr><th>Form</th><th>Resolves to</th></tr>
+      <tr><td><code>daily at 9am</code></td><td>every day at 9:00 am</td></tr>
+      <tr><td><code>every day at 09:00</code> · <code>everyday 9am</code></td><td>same as above</td></tr>
+      <tr><td><code>weekdays at 7:30am</code> · <code>mon-fri at 7:30am</code></td><td>Mon–Fri at 07:30</td></tr>
+      <tr><td><code>weekends at 10am</code></td><td>Sat + Sun at 10:00 am</td></tr>
+      <tr><td><code>mon, wed at 4pm</code> · <code>monday and wednesday at 16:00</code></td><td>Mon + Wed at 4:00 pm</td></tr>
+      <tr><td><code>every Monday at 9am</code></td><td>single weekday</td></tr>
+      <tr><td><code>every 30 minutes</code></td><td>interval — fires every 30 min</td></tr>
+      <tr><td><code>at 2026-06-15T14:00</code></td><td>one-shot at the given ISO datetime</td></tr>
+    </table>
+    <p>Times accept 12-hour (<code>9am</code>, <code>4pm</code>, <code>7:30pm</code>) and 24-hour (<code>09:00</code>, <code>16:00</code>) formats. Bare numbers without am/pm or a colon are rejected — write <code>9:00</code>, not <code>9</code>.</p>
     <p>The timer loop lives in the Rust core and ticks every 30 seconds. State persists at <code>~/.mcp-widget/schedules.json</code>.</p>
 
     <h3>Own context, not the active project</h3>
